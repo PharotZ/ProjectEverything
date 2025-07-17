@@ -1,0 +1,32 @@
+// Color mapping for each album with primary, secondary, and accent colors
+export const albumColors = {
+    "JAAFAR, Rouhnaa": { primary: "#B5C8D5ff", secondary: "#304548ff", accent: "#080401ff" },
+    "Music, Playboi Carti": { primary: "#ffffff", secondary: "#ffffff", accent: "#000000" },
+    "Nouvelle Economie, Ptite soeur": { primary: "#ffffff", secondary: "#ffffff", accent: "#000000" },
+    "Garçon, Luther": { primary: "#EAEAEAff", secondary: "#0E0E0Eff", accent: "#7B7B7Bff" },
+    "ERRR, La fève": { primary: "#7B7E8Fff", secondary: "#000002ff", accent: "#91451Eff" },
+    "24, La fève": { primary: "#2B5063ff", secondary: "#821A1Eff", accent: "#040404ff" },
+    "Cut4Zalgo, Ptite soeur": { primary: "#FFED33ff", secondary: "#ffffff", accent: "#CC0000ff" },
+    "Igor, Tyler the Creator": { primary: "#F2AAC0ff", secondary: "#3A3434ff", accent: "#6F6F6Fff" },
+    "Offline!, JPEGMAFIA": { primary: "#F95327ff", secondary: "#120304ff", accent: "#FFE5BFff" },
+    "I lay down my life for you, JPEGMAFIA": { primary: "#FFED76ff", secondary: "#E6FEFEff", accent: "#201E21ff" },
+    "+99xp, Jolagreen23": { primary: "#8399CBff", secondary: "#ECFBFEff", accent: "#0C0B10ff" },
+    "MBDTF, Kanye West": { primary: "#EE2140ff", secondary: "#D6923Fff", accent: "#1EB39Fff" },
+    "TLOP, Kanye West": { primary: "#F58B57ff", secondary: "#F58B57ff", accent: "#1C0702ff" },
+    "Yeezus, Kanye West": { primary: "#FF0406ff", secondary: "#CFD1DAff", accent: "#D7F5F7ff" },
+    "Donda, Kanye West": { primary: "#2d3436", secondary: "#636e72", accent: "#000000" },
+    "A Great Chaos, Ken Carson": { primary: "#8B868Bff", secondary: "#696F78ff", accent: "#030100ff" },
+    "Playboi Carti, Playboi Carti": { primary: "#905B31ff", secondary: "#A2908Eff", accent: "#A25649ff" },
+    "Trinity, Laylow": { primary: "#2CED6Cff", secondary: "#000100ff", accent: "#14A6CAff" },
+    "Brat, Charli XCX": { primary: "#8BCF00ff", secondary: "#000000ff", accent: "#8BCF00ff" },
+    "QALF Infinity, Damso": { primary: "#EA1323ff", secondary: "#1E88DEff", accent: "#CBE843ff" },
+    "GNX, Kendrick Lamar": {  primary: "#EAEAEAff", secondary: "#0E0E0Eff", accent: "#7B7B7Bff" },
+    "Laïla, Khali": { primary: "#F2B0BFff", secondary: "#97ABC8ff", accent: "#EFE602ff" },
+    "Platinus, bib sama.": { primary: "#EA0C62ff", secondary: "#030000ff", accent: "#FFFFFFff" },
+    "Aftërlyfe, Yeat": { primary: "#2d3436", secondary: "#636e72", accent: "#000000" },
+    "CMIYGL, Tyler the Creator": { primary: "#DFDEC6ff", secondary: "#75371Cff", accent: "#84C5C7ff" },
+    "Chromakopia, Tyler the Creator": { primary: "#3F3E37ff", secondary: "#AFAE96ff", accent: "#03813Dff" },
+    "Horion, Rouhnaa": { primary: "#79292Aff", secondary: "#875A46ff", accent: "#1F2C1Dff" },
+    "La lueur des tréfonds, BLOODY$ANJI": { primary: "#2d3436", secondary: "#636e72", accent: "#000000" }
+}
+
