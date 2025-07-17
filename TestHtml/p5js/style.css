@@ -1,0 +1,16 @@
+html, body {
+  margin: 20;
+  padding: 20;
+}
+
+canvas {
+  display: block;
+}
+
+.animation {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  
+}

@@ -1,0 +1,30 @@
+:root {
+  --back-color1:#6a0000;
+  --back-color2:#3d0508;
+  --back-color3: #240000;
+  --text-color: #ffffff;
+  --border-color:#ffffff;
+  --elt-bg:#0077b6;
+}
+
+html{
+  height:100%;
+}
+body {
+  height:100%;
+  background:linear-gradient(0deg, var(--back-color3) 0%, var(--back-color2) 35%, var(--back-color1) 100%);;
+  color: var(--text-color);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+a{
+  color:var(--text-color);
+}
+
+.Parts {
+  border-color: var(--border-color);
+}
+
+#form-aff{color:var(--text-color);border-color: var(--border-color);}
+

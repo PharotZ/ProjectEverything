@@ -1,0 +1,46 @@
+:root {
+    --light: #ffffff;
+    --sky: rgba(9,9,121,1);
+    --purple: #9163cb;
+    --dark: #1e1e1e;
+    --blood:#300707;
+  }
+  
+  .theme-switches {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  
+  .switch {
+    border: 2px solid black;
+    border-radius: 50px;
+    height: 7px;
+    width: 10px;
+    margin: 2px;
+  }
+  
+  .switch:hover {
+    transform: scale(1.05);
+    transition: 0.3s ease-in-out;
+  }
+  
+  #switch-1 {
+    background-color: var(--light);
+  }
+  
+  #switch-2 {
+    background-color: var(--sky);
+  }
+  
+  #switch-3 {
+    background-color: var(--purple);
+  }
+  
+  #switch-4 {
+    background-color: var(--dark);
+  }
+
+  #switch-5 {
+    background-color: var(--blood);
+  }

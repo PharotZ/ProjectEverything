@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html style="font:1em arial;">
+    <head>
+        <title>ALL</title>
+        <meta name="viewport" content="width=device-width">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <link rel="stylesheet" href="styles/style-switch.css" type="text/css" media="all" >
+        <link rel="stylesheet" href="styles/styleclothes.css" type="text/css" media="all" >
+        <link rel="stylesheet" href="styles/style.css" type="text/css" media="all" >
+        <link rel="stylesheet" id="switcher-id" href="">
+    </head>
+    <body>
+        <header>
+          <div id="brand" style="display: flex;">
+            <a href="index.html"><h1>Core</h1></a>
+            <img src="images/logo.png" style="width:50px">        
+        
+            <div class="theme-switches">
+
+                <span><div data-theme="light" class="switch" id="switch-1"></div></span>
+    
+                <span><div data-theme="sky" class="switch" id="switch-2"></div></span>
+    
+                <span><div data-theme="purple" class="switch" id="switch-3"></div></span>
+    
+                <span><div data-theme="dark" class="switch" id="switch-4"></div></span>
+    
+                <span><div data-theme="blood" class="switch" id="switch-5"></div></span>
+    
+            </div>
+          </div>
+            <ul>
+              <li><a href="clothes.html">DRESSER</a></li>
+              <li><a href="architecture.html">ARCHITECTURE</a></li>
+              <li><a href="music.html">MUSIC</a></li>
+              <li><a href="aesthetics.html">AESTHETICS</a></li>
+            </ul>   
+        </header>
+        <main>
+          <div class="Parts" id="pinterest"><script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
+            <a data-pin-do="embedBoard" data-pin-board-width="669" data-pin-scale-height="240" data-pin-scale-width="200" href="https://www.pinterest.fr/PharotZ/the-world-of-fashion/tops"></a>
+            <a data-pin-do="embedBoard" data-pin-board-width="669" data-pin-scale-height="240" data-pin-scale-width="200" href="https://www.pinterest.fr/PharotZ/the-world-of-fashion/bottoms"></a>
+            <a data-pin-do="embedBoard" data-pin-board-width="669" data-pin-scale-height="240" data-pin-scale-width="200" href="https://www.pinterest.fr/PharotZ/the-world-of-fashion/shoes"></a>
+            <a data-pin-do="embedBoard" data-pin-board-width="669" data-pin-scale-height="240" data-pin-scale-width="200" href="https://www.pinterest.fr/PharotZ/the-world-of-fashion/hats-scarfs"></a>
+          </div>
+          <div id="Sep">
+              <div class="Parts" id="instagram" style="width:50%"><a class="twitter-timeline" data-height="500" href="https://twitter.com/CaminoTV?ref_src=twsrc%5Etfw">Tweets by CaminoTV</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+              <div class="Parts" id="twitter" style="width:50%"><a class="twitter-timeline" data-lang="en" data-height="500" href="https://twitter.com/mchamp_?ref_src=twsrc%5Etfw">Tweets by mchamp_</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+          </div>
+          <div class="Parts" id="Brands">
+            <div class="form" id="form-brand">
+                <label>Logo: <input id="logo" type="file"></label>
+                <label>Brand: <input id="brand-input" type="text" placeholder="Ex:Asics"></label>
+                <label>Style: <input id="style" type="text" placeholder="Sportswear"></label>
+                <label>Specialty: <input id="Spec" type="text" placeholder="Shoes"></label>
+                <label>Link: <input id="link" type="url" placeholder="http://..."></label>
+                <span id="error"></span>
+                <button onclick="publishToBrandTable()">Submit</button>
+                <button type="button" onclick="document.getElementById('form-brand').style.display='none'" class="cancelbtn">Quit</button>
+            </div>
+            <table id="brand-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th onclick="sortTable(1)" style="cursor:pointer;">Brand</th>
+                        <th onclick="sortTable(2)" style="cursor:pointer;">Style</th>
+                        <th onclick="sortTable(3)" style="cursor:pointer;">Specialité</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="images/Diesel.png" style="width:100%"></td>
+                        <td>Diesel</td>
+                        <td>Grunge</td>
+                        <td>Jeans</td>
+                        <td><a href="https://fr.diesel.com/fr/">Diesel.com</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/MM6.png" style="width:100%"></td>
+                        <td>MM6</td>
+                        <td>Decontracté</td>
+                        <td>all</td>
+                        <td><a href="https://www.maisonmargiela.com/fr-fr/mm6/">MM6.com</a><td>
+                    </tr>
+                    <tr>                        
+                        <td><img src="images/MaisonMargiela.png" style="width:100%"></td>
+                        <td>Maison Margiela</td>
+                        <td>Haute Couture</td>
+                        <td>all</td>
+                        <td><a href="https://www.maisonmargiela.com/fr-fr/">MaisonMargiela.com</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/Arc'teryx.png" style="width:100%"></td>
+                        <td>Arc'teryx</td>
+                        <td>Gorpcore</td>
+                        <td>Vestes</td>
+                        <td><a href="https://arcteryx.com/fr/fr?CMPID=ps|txt|sb|google|Arc%27teryx_Google-Search_S20_Performance_BOF_R:EMEA_C:FR_L:EN_Branded-Proper|.Proper-Arcteryx|arcteryx|139429448298-705624275701&utm_souce=&utm_medium=ps|txt|sb&utm_campaign=Arc%27teryx_Google-Search_S20_Performance_BOF_R:EMEA_C:FR_L:EN_Branded-Proper&gclsrc=aw.ds&gad_source=1&gclid=CjwKCAjwnei0BhB-EiwAA2xuBk0Dr12qOeJ4k7VLCuZLX19RK-2tqLqZg-vw3nhgrKlmj6tVUouJqhoCRmEQAvD_BwE"> Arc'teryx.com</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/KIKOKOSTADINOV.png" style="width:100%"></td>
+                        <td>Kiko Kostadinov</td>
+                        <td>Conceptuel</td>
+                        <td>Shoes</td>
+                        <td><a href="https://kikokostadinov.com">Kikokostadinov.com</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/LV.png" style="width:100%"></td>
+                        <td>Louis Vuitton</td>
+                        <td>Haute Couture</td>
+                        <td>Vestes</td>
+                        <td><a href="https://fr.louisvuitton.com/fra-fr/homepage">Louisvuitton.com</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/ChromeHearts.png" style="width:100%"></td>
+                        <td>Chrome Hearts</td>
+                        <td>Grunge</td>
+                        <td>Bijoux</td>
+                        <td><a href="https://www.chromehearts.com">ChromeHearts.com</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/VW.png" style="width:100%"></td>
+                        <td>Vivienne Westwood</td>
+                        <td>Haute Couture</td>
+                        <td>Bijoux</td>
+                        <td><a href="https://www.viviennewestwood.com/fr-fr/accueil/">VivienneWestwood.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="document.getElementById('form-brand').style.display='block'" id="form-aff"><b>Add a brand</b></button>
+
+          </div>
+          <div class="Parts" id="Wishlist">
+            <div class="form" id="form-wishlist">
+                <label>Link: <input id="link" type="url" placeholder="http://..."></label>
+                <label>Type: <input id="Type" type="text" placeholder="Shoes"></label>
+                <label>Brand: <input id="brand-input" type="text" placeholder="Asics"></label>
+                <label>Color: <input id="Color" type="text" placeholder="Grey"></label>
+                <label>Price: <input id="Price" type="number" placeholder="180"></label>
+                <span id="error"></span>
+                <button onclick="publishToWishlistTable()">Submit</button>
+                <button type="button" onclick="document.getElementById('form-wishlist').style.display='none'" class="cancelbtn">Quit</button>
+            </div>
+            <table id="wishlist-tab">
+                <caption>Wishlist</caption>
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>Type</th>
+                        <th>Brand</th>
+                        <th>Color</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="https://davrilsupply.com/products/dajcabross23?variant=46750406148425">AbyssRoots</a></td>
+                        <td>Jacket</td>
+                        <td>Davril Supply</td>
+                        <td><p>Blue</p><p>White</p></td>
+                        <td>199.95</td>
+                    </tr>
+                    <tr>
+                        <td><a href="https://www.ssense.com/fr-fr/hommes/produit/alyx/pantalon-menuiser-surteint-blanc-et-gris/15147121">SSENSE</a></td>
+                        <td>Pant</td>
+                        <td>1017 ALYX 9SM</td>
+                        <td><p>White</p><p>Grey</p></td>
+                        <td>880<td>
+                    </tr>
+                    <tr>
+                        <td><a href="https://www.salomon.com/fr-fr/shop-emea/product/xt-slate-li5792.html#color=88734">Salomon</a></td>
+                        <td>Shoes</td>
+                        <td>Salomon</td>
+                        <td><p>Vanilla</p><p>White</p></td>
+                        <td>195</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="document.getElementById('form-wishlist').style.display='block'" id="form-aff"><b>Add an article</b></button>
+          </div>
+          <script src="scripts/main.js"></script>
+      </main>
+        <footer>
+            <div class="tab">
+                <button class="tablinks" onclick="ChoseOption(event, 'Thème')">Thème</button>
+                <button class="tablinks" onclick="ChoseOption(event, 'Organisation')">Organisation</button>
+                <button class="tablinks" onclick="ChoseOption(event, 'Credits')">Credits</button>
+            </div>
+            <div id="Thème" class="tabcontent">
+            </div>
+            
+            <div id="Organisation" class="tabcontent">
+                <h3>Réorganisez votre Core</h3>
+                <p>Paris is the capital of France.</p>
+            </div>
+
+            <div id="Credits" class="tabcontent">
+                <h3>Every website/video used to create Core</h3>
+                <ul>
+                    <li><a href="https://developers.pinterest.com/docs/web-features/add-ons-overview/">Include Pinterest Widgets</a></li>
+                    <li><a href="https://www.w3schools.com/howto/default.asp">Tabs</a></li>
+                    <li><a href="https://dev.to/urstrulyvishwak/create-a-form-and-fill-form-details-in-below-table-in-javascript-1ccd">Create a table fillable through a form</a></li>
+                    <li><a href="https://www.studytonight.com/post/build-a-theme-switcher-for-your-website-with-javascript">Build a theme selector</a></li>
+                    <li><a href="https://publish.twitter.com/#">Embed Twitter Feed</a></li>
+                </ul>
+            </div>
+        </footer>
+    </body>
+</html>
+

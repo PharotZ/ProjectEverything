@@ -1,0 +1,23 @@
+:root {
+  --back-color: #000000;
+  --text-color: #ffffff;
+  --header-back: #000000;
+  --border-color:#3f3d3d;
+  --elt-bg:#1e1a1a;
+}
+
+body {
+  background-color: var(--back-color);
+  color: var(--text-color);
+}
+
+.Parts {
+  background-color: var(--elt-bg);
+  border-color: var(--border-color);
+}
+
+a{
+  color:var(--text-color);
+}
+
+#form-aff{color:var(--text-color);border-color: var(--border-color);}

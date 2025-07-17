@@ -1,0 +1,28 @@
+:root {
+  --back-color1:rgba(34,0,255,1);
+  --back-color2:rgba(9,9,121,1);
+  --back-color3: rgba(2,0,36,1);
+  --text-color: #ffffff;
+  --border-color:#ffffff;
+}
+
+html{
+  height:100%;
+}
+body {
+  height:100%;
+  background:linear-gradient(0deg, var(--back-color3) 0%, var(--back-color2) 35%, var(--back-color1) 100%);;
+  color: var(--text-color);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+a{
+  color:var(--text-color);
+}
+
+.Parts {
+  border-color: var(--border-color);
+}
+
+#form-aff{color:var(--text-color);border-color: var(--border-color);}
