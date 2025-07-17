@@ -1,0 +1,34 @@
+/* Font definitions for CreativePreview */
+
+/* VG5000 Font for body text */
+@font-face {
+  font-family: 'VG5000';
+  src: url('./VG5000-Regular_web.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bianzhidai Font for headings */
+@font-face {
+  font-family: 'Bianzhidai';
+  src: url('./bianzhidai-Base.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Variables */
+:root {
+  --font-headings: 'Bianzhidai', sans-serif;
+  --font-body: 'VG5000', monospace;
+}
+
+/* Base Typography Classes */
+.font-heading {
+  font-family: var(--font-headings);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}

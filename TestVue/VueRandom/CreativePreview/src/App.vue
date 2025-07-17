@@ -1,0 +1,67 @@
+<script setup>
+
+</script>
+
+<template>
+  <div class="app-container">
+    <header class="site-header">
+      <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/ParallaxScroll">Parallax Scroll</router-link> |
+        <router-link to="/wheel">Wheel Scrolling</router-link> |
+        <router-link to="/test">test</router-link>
+      </nav>
+    </header>
+    <main>
+      <router-view :key="$route.path"></router-view>
+    </main>
+  </div>
+</template>
+
+
+<style scoped>
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  z-index: 1000; /* Ensure navbar is above everything */
+}
+
+nav {
+  text-align: center;
+  
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 1rem;
+  padding: 0.5rem;
+  font-family: var(--font-headings);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+nav a.router-link-active {
+  border-bottom: 2px solid white;
+}
+
+main {
+  flex: 1;
+  margin-top: 40px; /* Add spacing for the fixed header */
+  padding-top: 10px; /* Add some additional padding */
+}
+</style>
