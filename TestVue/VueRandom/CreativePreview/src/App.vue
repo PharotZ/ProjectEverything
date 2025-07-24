@@ -42,7 +42,6 @@
 
 nav {
   text-align: center;
-  
 }
 
 nav a {
@@ -60,8 +59,7 @@ nav a.router-link-active {
 }
 
 main {
-  flex: 1;
-  margin-top: 40px; /* Add spacing for the fixed header */
+  flex: 1; /* Add spacing for the fixed header */
   padding-top: 10px; /* Add some additional padding */
 }
 </style>

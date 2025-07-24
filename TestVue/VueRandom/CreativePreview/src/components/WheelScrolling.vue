@@ -1,252 +1,44 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { allAlbums, albumColors } from '@/assets/albumData'
+import { hatch } from 'ldrs'
+hatch.register()
 
-const rotationDegrees = ref(0)
-const wheelRef = ref(null)
-const isScrolling = ref(false)
-const scrollTimeout = ref(null)
-const scrollDirection = ref(1) // 1 for clockwise, -1 for counterclockwise
-const hoveredIndex = ref(null)
 
-// Music player state
+const wheelRadius = 400
+const albumCount = allAlbums.length
+const angleStep = 360 / albumCount
+const rotation = ref(0) // Current wheel rotation in degrees
+const selectedIndex = ref(0)
 const audioRef = ref(null)
 const isPlaying = ref(false)
 const currentTime = ref(0)
 const duration = ref(0)
 const volume = ref(0.5)
 
-// Controls for album spacing and visibility
-const angleBetweenalbums = computed(() => 12) // Fixed angle between albums (degrees)
-const wheelRadius = 400 // Distance from center
-
-// Create extended album list for seamless rotation
-const extendedalbums = computed(() => {
-    // Calculate how many albums we need for a full circle and some extra for seamless rotation
-    const totalalbumsNeeded = Math.ceil(360 / angleBetweenalbums.value) // Extra albums for smooth transitions
-    const extended = []
-
-    for (let i = 0; i < totalalbumsNeeded; i++) {
-        const albumIndex = i % allAlbums.length
-        extended.push({
-            name: allAlbums[albumIndex].name,
-            audioUrl: allAlbums[albumIndex].audioUrl,
-            angle: i * angleBetweenalbums.value,
-            originalIndex: albumIndex,
-            globalIndex: i
-        })
-    }
-
-    return extended
-})
-
-// Filter albums that are currently visible on screen
-const visiblealbums = computed(() => {
-    const currentRotation = rotationDegrees.value
-    const visiblealbumsMap = new Map() // To prevent duplicates
-
-    extendedalbums.value.forEach(album => {
-        // Calculate the album's current position after rotation
-        const albumPosition = album.angle - currentRotation
-        // Normalize the angle to 0-360 range
-        let normalizedPosition = ((albumPosition % 360) + 360) % 360
-
-        // Adjust the referential: shift by -90 degrees so that 0° is at top instead of right
-        // This makes: 0° = top, 90° = right, 180° = bottom, 270° = left
-        normalizedPosition = (normalizedPosition - 90 + 360) % 360        // Show albums on the right side of the wheel, accounting for item width
-        // We subtract 15 degrees to ensure items are fully hidden before entering view
-        if ((normalizedPosition >= 180 && normalizedPosition <= 360)) {
-            // Use a key based on the normalized position to prevent duplicates
-            const positionKey = Math.round(normalizedPosition / angleBetweenalbums.value) * angleBetweenalbums.value
-
-            if (!visiblealbumsMap.has(positionKey) ||
-                Math.abs(normalizedPosition - positionKey) < Math.abs(visiblealbumsMap.get(positionKey).currentPosition - positionKey)) {
-                visiblealbumsMap.set(positionKey, {
-                    ...album,
-                    currentPosition: normalizedPosition + 90 // Add back 90° for positioning
-                })
-            }
+// Position albums around the wheel
+const albumPositions = computed(() => {
+    return allAlbums.map((album, i) => {
+        // Angle for this album
+        const angle = (i * angleStep + rotation.value) % 360
+        // Convert angle to radians
+        const rad = (angle - 90) * Math.PI / 180 // -90 so 0° is at top
+        // Position on wheel
+        const x = wheelRadius * Math.cos(rad)
+        const y = wheelRadius * Math.sin(rad)
+        return {
+            ...album,
+            angle,
+            x,
+            y,
+            index: i,
+            centered: i === selectedIndex.value
         }
     })
-
-    return Array.from(visiblealbumsMap.values())
 })
 
-// Calculate the currently selected album based on rotation
-const selectedalbumIndex = computed(() => {
-    // Find the album closest to the 90-degree position (right side center in new referential)
-    const targetAngle = 270 // Right center in the adjusted referential
-    let closestalbum = visiblealbums.value[0] 
-    let minDistance = Infinity
-
-    visiblealbums.value.forEach(album => {
-        // Calculate distance considering the adjusted referential
-        const adjustedPosition = (album.currentPosition - 90 + 360) % 360
-        let distance = Math.abs(adjustedPosition - targetAngle)
-
-        // Handle wrap-around at 0°/360° boundary
-        if (distance > 180) {
-            distance = 360 - distance
-        }
-
-        if (distance < minDistance) {
-            minDistance = distance
-            closestalbum = album
-        }
-    })
-
-    return closestalbum?.originalIndex || 0
-})
-
-// Get the currently selected album
-const selectedalbum = computed(() => {
-    return allAlbums[selectedalbumIndex.value]
-})
-
-// Watch for album changes and load new audio
-watch(selectedalbum, (newAlbum) => {
-    if (audioRef.value && newAlbum) {
-        audioRef.value.src = newAlbum.audioUrl
-        audioRef.value.load()
-        currentTime.value = 0
-
-        // Auto-play if was playing before
-        if (isPlaying.value) {
-            playAudio()
-        }
-    }
-})
-
-// Music player functions
-const playAudio = () => {
-    if (audioRef.value) {
-        audioRef.value.play()
-        isPlaying.value = true
-    }
-}
-
-const pauseAudio = () => {
-    if (audioRef.value) {
-        audioRef.value.pause()
-        isPlaying.value = false
-    }
-}
-
-const togglePlayPause = () => {
-    if (isPlaying.value) {
-        pauseAudio()
-    } else {
-        playAudio()
-    }
-}
-
-const updateTime = () => {
-    if (audioRef.value) {
-        currentTime.value = audioRef.value.currentTime
-        duration.value = audioRef.value.duration || 0
-    }
-}
-
-const seekTo = (event) => {
-    if (audioRef.value && duration.value) {
-        const rect = event.target.getBoundingClientRect()
-        const percent = (event.clientX - rect.left) / rect.width
-        const newTime = percent * duration.value
-        audioRef.value.currentTime = newTime
-        currentTime.value = newTime
-    }
-}
-
-const formatTime = (time) => {
-    if (!time || isNaN(time)) return '0:00'
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
-}
-
-const setVolume = (event) => {
-    const rect = event.target.getBoundingClientRect()
-    const percent = (event.clientX - rect.left) / rect.width
-    volume.value = Math.max(0, Math.min(1, percent))
-    if (audioRef.value) {
-        audioRef.value.volume = volume.value
-    }
-}
-
-// Handle wheel scroll event
-const handleScroll = (event) => {
-    // Determine scroll direction
-    const delta = event.deltaY
-
-    // Set scroll direction based on deltaY
-    scrollDirection.value = delta > 0 ? 1 : -1
-
-    // Update rotation - this rotates the entire wheel
-    rotationDegrees.value += scrollDirection.value * (angleBetweenalbums.value / 3)
-
-    // Visual feedback for active scrolling
-    isScrolling.value = true
-
-    // Clear previous timeout
-    if (scrollTimeout.value) {
-        clearTimeout(scrollTimeout.value)
-    }
-
-    // Set timeout to stop active state
-    scrollTimeout.value = setTimeout(() => {
-        isScrolling.value = false
-    }, 200)
-
-    event.preventDefault()
-}
-
-// Handle mouse enter on album item
-const handleMouseEnter = (index) => {
-    hoveredIndex.value = index
-}
-
-// Handle mouse leave on album item
-const handleMouseLeave = () => {
-    hoveredIndex.value = null
-}
-
-// Handle image loading errors
-const handleImageError = (event) => {
-    // Fallback to a default cover image
-    event.target.src = '/covers/default-cover.jpg'
-}
-
-onMounted(() => {
-    // Add wheel event listener
-    window.addEventListener('wheel', handleScroll, { passive: false })
-
-    // Setup audio event listeners
-    if (audioRef.value) {
-        audioRef.value.addEventListener('timeupdate', updateTime)
-        audioRef.value.addEventListener('ended', () => {
-            isPlaying.value = false
-            currentTime.value = 0
-        })
-        audioRef.value.volume = volume.value
-    }
-})
-
-onUnmounted(() => {
-    // Remove wheel event listener
-    window.removeEventListener('wheel', handleScroll)
-    if (scrollTimeout.value) {
-        clearTimeout(scrollTimeout.value)
-    }
-
-    // Clean up audio listeners
-    if (audioRef.value) {
-        audioRef.value.removeEventListener('timeupdate', updateTime)
-    }
-})
-
-// Get current album colors
 const currentColors = computed(() => {
-    const albumName = selectedalbum.value?.name
+    const albumName = selectedAlbum.value?.name
     return albumColors[albumName] || { primary: "#42b883", secondary: "#369970", accent: "#2c7a5c" }
 })
 
@@ -261,6 +53,116 @@ const dynamicStyles = computed(() => {
         '--secondary-glow': colors.secondary + '40'
     }
 })
+
+// Find the centered album (closest to 270°)
+const updateSelectedIndex = () => {
+    let minDiff = 9999
+    let idx = 0
+    albumPositions.value.forEach((pos, i) => {
+        // 270° is right center
+        let diff = Math.abs(((pos.angle + 360) % 360) - 270)
+        if (diff > 180) diff = 360 - diff
+        if (diff < minDiff) {
+            minDiff = diff
+            idx = i
+        }
+    })
+    selectedIndex.value = idx
+}
+
+// Scroll event: rotate wheel
+const handleScroll = (event) => {
+    const delta = event.deltaY
+    rotation.value += delta * 0.10 // Adjust sensitivity as needed
+    rotation.value = (rotation.value + 360) % 360
+    updateSelectedIndex()
+    event.preventDefault()
+}
+
+// Music player logic
+const selectedAlbum = computed(() => allAlbums[selectedIndex.value])
+watch(selectedAlbum, (album) => {
+    if (audioRef.value && album) {
+        audioRef.value.src = album.audioUrl
+        audioRef.value.load()
+        currentTime.value = 0
+        if (isPlaying.value) playAudio()
+    }
+})
+
+const playAudio = () => {
+    if (audioRef.value) {
+        audioRef.value.play()
+        isPlaying.value = true
+    }
+}
+const pauseAudio = () => {
+    if (audioRef.value) {
+        audioRef.value.pause()
+        isPlaying.value = false
+    }
+}
+const togglePlayPause = () => {
+    isPlaying.value ? pauseAudio() : playAudio()
+}
+const updateTime = () => {
+    if (audioRef.value) {
+        currentTime.value = audioRef.value.currentTime
+        duration.value = audioRef.value.duration || 0
+    }
+}
+const seekTo = (event) => {
+    if (audioRef.value && duration.value) {
+        const rect = event.target.getBoundingClientRect()
+        const percent = (event.clientX - rect.left) / rect.width
+        const newTime = percent * duration.value
+        audioRef.value.currentTime = newTime
+        currentTime.value = newTime
+    }
+}
+const formatTime = (time) => {
+    if (!time || isNaN(time)) return '0:00'
+    const minutes = Math.floor(time / 60)
+    const seconds = Math.floor(time % 60)
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
+const setVolume = (event) => {
+    const rect = event.target.getBoundingClientRect()
+    const percent = (event.clientX - rect.left) / rect.width
+    volume.value = Math.max(0, Math.min(1, percent))
+    if (audioRef.value) {
+        audioRef.value.volume = volume.value
+    }
+}
+const setVolumeSlider = (event) => {
+    const val = parseFloat(event.target.value)
+    volume.value = val
+    if (audioRef.value) {
+        audioRef.value.volume = val
+    }
+}
+const handleImageError = (event) => {
+    event.target.src = '/covers/default-cover.jpg'
+}
+
+onMounted(() => {
+    window.addEventListener('wheel', handleScroll, { passive: false })
+    if (audioRef.value) {
+        audioRef.value.addEventListener('timeupdate', updateTime)
+        audioRef.value.addEventListener('ended', () => {
+            isPlaying.value = false
+            currentTime.value = 0
+        })
+        audioRef.value.volume = volume.value
+    }
+    updateSelectedIndex()
+})
+onUnmounted(() => {
+    window.removeEventListener('wheel', handleScroll)
+    if (audioRef.value) {
+        audioRef.value.removeEventListener('timeupdate', updateTime)
+    }
+})
 </script>
 
 <template>
@@ -271,61 +173,65 @@ const dynamicStyles = computed(() => {
         <!-- Main wheel container - positioned to show only right side -->
         <div ref="wheelRef" class="wheel">
             <!-- Individual album items positioned around the wheel -->
-            <div v-for="(album, index) in visiblealbums" :key="`album-${album.globalIndex}`" class="wheel-item"
-                :class="{ 'active-scrolling': isScrolling, 'selected': album.originalIndex === selectedalbumIndex }"
-                :style="{
-                    transform: `translate(0%, -50%) rotate(${album.currentPosition}deg) translateX(${wheelRadius}px) rotate(-${album.currentPosition}deg)`
-                }"
-                @mouseenter="handleMouseEnter(index)" @mouseleave="handleMouseLeave">
-                <div class="album-content" :class="{ 'hovered': hoveredIndex === index }">
+            <div v-for="(album, index) in albumPositions" :key="`album-${album.index}`" class="wheel-item"
+                :class="{ 'selected': album.centered }" :style="{
+                    transform: `translate(-50%, -50%) translate(${album.x}px, ${album.y}px)`
+                }">
+                <div class="album-content">
                     <div class="album-card">
                         <h3>{{ album.name }}</h3>
                     </div>
                 </div>
             </div>
 
-            <!-- Center point inside the wheel -->
-            <div class="center-dot"></div>
+
         </div>
 
         <!-- Music Player -->
         <div class="music-player">
             <div class="player-header">
                 <div class="album-cover">
-                    <img :src="selectedalbum.coverUrl" :alt="selectedalbum.name" @error="handleImageError" />
-                    <div class="cover-overlay" v-if="!isPlaying">
-                        <span class="play-icon">▶️</span>
-                    </div>
+                    <img v-if="selectedAlbum" :src="selectedAlbum.coverUrl" :alt="selectedAlbum.name"
+                        @error="handleImageError" />
                 </div>
                 <div class="player-info">
-                    <h3>{{ selectedalbum.name }}</h3>
+                    <h3 v-if="selectedAlbum">{{ selectedAlbum.name }}</h3>
                 </div>
             </div>
-            
+
             <div class="player-controls">
                 <button @click="togglePlayPause" class="play-pause-btn">
-                    <span v-if="isPlaying">⏸️</span>
-                    <span v-else>▶️</span>
+                    <span v-if="isPlaying">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </span>
+                    <span v-else><svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 18V6l8 6-8 6Z" />
+                        </svg>
+                    </span>
                 </button>
             </div>
-            
+
             <div class="player-progress">
                 <span class="time">{{ formatTime(currentTime) }}</span>
                 <div class="progress-bar" @click="seekTo">
                     <div class="progress-track">
-                        <div class="progress-fill" :style="{ width: duration ? (currentTime / duration) * 100 + '%' : '0%' }"></div>
+                        <div class="progress-fill"
+                            :style="{ width: duration ? (currentTime / duration) * 100 + '%' : '0%' }"></div>
                     </div>
                 </div>
                 <span class="time">{{ formatTime(duration) }}</span>
             </div>
-            
+
             <div class="volume-control">
                 <span>🔊</span>
-                <div class="volume-bar" @click="setVolume">
-                    <div class="volume-track">
-                        <div class="volume-fill" :style="{ width: volume * 100 + '%' }"></div>
-                    </div>
-                </div>
+                <input type="range" min="0" max="1" step="0.01" v-model="volume" @input="setVolumeSlider"
+                    class="volume-slider" />
             </div>
         </div>
     </div>
@@ -333,37 +239,24 @@ const dynamicStyles = computed(() => {
 
 <style scoped>
 .WheelScrolling {
-    height: 100vh;
+    height: 98vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #0a0a0a;
     color: white;
     position: relative;
     overflow: hidden;
     transition: all 0.6s ease;
 }
 
-@keyframes pulse {
-    0% {
-        opaalbum: 0.4;
-    }
-
-    50% {
-        opaalbum: 0.8;
-    }
-
-    100% {
-        opaalbum: 0.4;
-    }
-}
-
 .wheel {
     position: absolute;
-    left: -1500px;
-    /* Increased offset to ensure items can fully hide */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* Increased offset to ensure items can fully hide   */
     width: 2400px;
     /* Increased width to match new offset */
     height: 600px;
@@ -377,8 +270,7 @@ const dynamicStyles = computed(() => {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: fit-content;
-    height: fit-content;
+    width: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -402,7 +294,6 @@ const dynamicStyles = computed(() => {
     will-change: transform;
     width: 100%;
     height: 100%;
-    transform-origin: center;
 }
 
 .album-card {
@@ -414,8 +305,9 @@ const dynamicStyles = computed(() => {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px var(--primary-glow);
     display: inline-block;
-    max-width: 100%;
+    width: 300px;
     box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .album-content.hovered .album-card {
@@ -439,23 +331,11 @@ const dynamicStyles = computed(() => {
     text-align: center;
 }
 
-.center-dot {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    box-shadow: 0 0 20px var(--primary-glow);
-    z-index: 0;
-    top: 50%;
-    left: 65%;
-    transform: translate(-50%, -50%);
-    transition: all 0.6s ease;
-}
-
 .music-player {
     position: fixed;
-    right: 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.9);
     border: 1px solid var(--primary-color);
     border-radius: 12px;
@@ -464,7 +344,7 @@ const dynamicStyles = computed(() => {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    min-width: 400px;
+    width: 300px;
     z-index: 10;
     transition: border-color 0.6s ease;
 }
@@ -490,10 +370,6 @@ const dynamicStyles = computed(() => {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-}
-
-.album-cover:hover img {
-    transform: scale(1.05);
 }
 
 .cover-overlay {
@@ -551,8 +427,28 @@ const dynamicStyles = computed(() => {
     justify-content: center;
 }
 
+.play-pause-btn span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.play-pause-btn:hover span {
+    height: 24px;
+    width: 24px;
+}
+
+.play-pause-btn svg {
+    transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.play-pause-btn:hover svg {
+    transform: scale(1.15);
+}
+
 .play-pause-btn:hover {
-    transform: scale(1.1);
     box-shadow: 0 0 20px var(--primary-glow);
 }
 
@@ -604,5 +500,76 @@ const dynamicStyles = computed(() => {
 
 .volume-bar {
     width: 100px;
+}
+
+input[type="range"].volume-slider {
+    width: 100%;
+    appearance: none;
+    background: transparent;
+    outline: none;
+}
+
+.volume-slider {
+    width: 100%;
+    accent-color: var(--primary-color);
+    background: transparent;
+    border-radius: 3px;
+    height: 6px;
+    margin-left: 5px;
+    margin-right: 5px;
+    outline: none;
+    transition: accent-color 0.6s ease;
+    /* Custom track and thumb styling for color gradient */
+}
+
+.volume-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.volume-slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 6px var(--primary-glow);
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: -3px;
+}
+
+.volume-slider:focus::-webkit-slider-thumb {
+    background: var(--secondary-color);
+}
+
+/* Firefox */
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 6px var(--primary-glow);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.volume-slider::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* Edge/IE */
+.volume-slider::-ms-fill-lower {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.volume-slider::-ms-fill-upper {
+    background: var(--secondary-color);
+    border-radius: 3px;
 }
 </style>

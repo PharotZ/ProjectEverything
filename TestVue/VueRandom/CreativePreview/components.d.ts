@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimatePresence: typeof import('motion-v')['AnimatePresence']
+    copy: typeof import('./src/components/WheelScrolling copy.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
