@@ -1,15 +1,16 @@
 <script setup>
-
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>
 
 <template>
   <div class="app-container">
-    <header class="site-header">
+    <header v-if="route.path !== '/'" class="site-header">
       <nav>
         <router-link to="/">Home</router-link> |
-        <router-link to="/ParallaxScroll">Parallax Scroll</router-link> |
         <router-link to="/wheel">Music Player</router-link> |
-        <router-link to="/test">Test</router-link>
+        <router-link to="/fashion">Fashion Table</router-link> |
+        <router-link to="/contact">Contact</router-link>
       </nav>
     </header>
     <main>

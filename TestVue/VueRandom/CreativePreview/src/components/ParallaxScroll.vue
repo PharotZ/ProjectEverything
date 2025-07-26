@@ -1,6 +1,5 @@
 <script>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { motion } from 'motion-v'
 
 export default {
   setup() {
@@ -76,23 +75,28 @@ export default {
         transform: `scale(${globeScale})`,
         filter: `blur(${globeBlur}px)`
       }" />
-    </div> <!-- Menu that appears after scrolling -->
+    </div>
+    <!-- Menu that appears after scrolling -->
     <div class="menu-container" :style="{ opacity: menuOpacity }">
-      <h2>Which Animation is next ?</h2>      <div class="menu-items">
-        <div class="menu-item">
-          <h3>Parallax Effect</h3>
-          <p>Smooth scrolling animations</p>
-        </div>
+      <h1>Welcome to Creative Preview</h1>
+      <p>Ce projet a été créé a la base dans l'idée de m'entraîner à manipuler Vue 3 et d'autres bibliothèques telles que Motion.</p>
+      <p>Maintenant j'ai juste envie de créer une sorte de hub qui regroupe plein de fonctionnalités</p>
+      <p>Si vous avez des suggestions n'hésitez pas à m'en faire part ! (y'a un form aussi dans la page de contact si vous voulez)</p>
+      <div class="menu-items">
+        <router-link to="/wheel" class="menu-item">
+          <h3>Music Player</h3>
+          <p>Un aperçu de mes albums préférés avec un morceau de chaque album a lire</p>
+        </router-link>
 
-        <div class="menu-item">
-          <h3>3D Rotation</h3>
-          <p>Explore depth and perspective</p>
-        </div>
+        <router-link to="/fashion" class="menu-item">
+          <h3>Fashion Table</h3>
+          <p>Un tableau intéractif de marques à suivre</p>
+        </router-link>
 
-        <div class="menu-item">
-          <h3>Morphing Shapes</h3>
-          <p>Dynamic shape transformations</p>
-        </div>
+        <router-link to="/contact" class="menu-item">
+          <h3>Contact Page</h3>
+          <p>Un petit portfolio avec form pour me contacter</p>
+        </router-link>
       </div>
     </div>
   </div>
@@ -110,16 +114,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -40px; /* Offset the main margin-top to keep proper positioning */
-  padding-top: 40px; /* Add padding to compensate for the offset */
+  margin-top: -40px;
+  /* Offset the main margin-top to keep proper positioning */
+  padding-top: 40px;
+  /* Add padding to compensate for the offset */
 }
 
 .globe-container {
   position: fixed;
-  top: 40px; /* Added space for the navbar */
+  top: 40px;
+  /* Added space for the navbar */
   left: 0;
   width: 100%;
-  height: calc(100vh - 40px); /* Adjusted height to account for navbar */
+  height: calc(100vh - 40px);
+  /* Adjusted height to account for navbar */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,10 +145,12 @@ export default {
 
 .menu-container {
   position: fixed;
-  top: 40px; /* Added space for the navbar */
+  top: 40px;
+  /* Added space for the navbar */
   left: 0;
   width: 100%;
-  height: calc(100vh - 40px); /* Adjusted height to account for navbar */
+  height: calc(100vh - 40px);
+  /* Adjusted height to account for navbar */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -152,8 +162,10 @@ export default {
   transition: opacity 0.3s ease;
 }
 
-.menu-container h2 {
+.menu-container h1 {
+  margin-top: 70px;
   font-size: 3rem;
+  color:#475281;
   margin-bottom: 40px;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   font-family: var(--font-headings);
@@ -181,7 +193,7 @@ export default {
 .menu-item h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #c0f2ff;
+  color:#475281;
   font-family: var(--font-headings);
 }
 
@@ -189,5 +201,15 @@ export default {
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.4;
   font-family: var(--font-body);
+}
+
+@media (max-width: 600px) {
+  .menu-container h1 {
+    font-size: 1.5rem;
+    margin-top: 100px;
+  }
+  .menu-container {
+    padding-top: 40px;
+  }
 }
 </style>

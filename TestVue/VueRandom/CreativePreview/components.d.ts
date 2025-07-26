@@ -9,7 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimatePresence: typeof import('motion-v')['AnimatePresence']
+    Contact: typeof import('./src/components/Contact.vue')['default']
     copy: typeof import('./src/components/WheelScrolling copy.vue')['default']
+    Fashion: typeof import('./src/components/Fashion.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
@@ -24,7 +26,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Test: typeof import('./src/components/PhoneMusic.vue')['default']
-    Tets: typeof import('./src/comp./src/components/MusicPlayer.vue
+    Tets: typeof import('./src/components/tets.vue')['default']
     WheelScrolling: typeof import('./src/components/WheelScrolling.vue')['default']
   }
 }

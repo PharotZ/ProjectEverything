@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ParallaxScroll from './components/ParallaxScroll.vue';
-import WheelScrolling from './components/MusicPlayer.vue';
-import tets from './components/PhoneMusic.vue';
+import MusicPlayer from './components/MusicPlayer.vue';
+import Contact from './components/Contact.vue';
+import Fashion from './components/Fashion.vue';
 import Home from './components/Home.vue';
 
 const routes = [
     {
         path: '',
         name: 'Home',
-        component: Home,
+        component: ParallaxScroll,
     },
     {
         path: '/ParallaxScroll',
@@ -18,15 +19,19 @@ const routes = [
     {
         path: '/wheel',
         name: 'Wheel',
-        component: WheelScrolling,
+        component: MusicPlayer,
     },
     {
-        path: '/test',
-        name: 'Test',
-        component: tets,
+        path: '/contact',
+        name: 'Contact',
+        component: Contact,
+    },
+    {
+        path: '/fashion',
+        name: 'Fashion',
+        component: Fashion,
     }
 ];
-
 const router = createRouter({
     history: createWebHistory('/'),
     routes,
