@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ParallaxScroll from './components/ParallaxScroll.vue';
-import WheelScrolling from './components/WheelScrolling.vue';
-import tets from './components/tets.vue';
+import WheelScrolling from './components/MusicPlayer.vue';
+import tets from './components/PhoneMusic.vue';
 import Home from './components/Home.vue';
 
 const routes = [

@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { allAlbums, albumColors } from '@/assets/albumData'
 import { hatch } from 'ldrs'
+import PhoneMusic from './PhoneMusic.vue'
 hatch.register()
 
 
@@ -16,6 +17,10 @@ const currentTime = ref(0)
 const duration = ref(0)
 const volume = ref(0.5)
 
+const isPhone = ref(window.innerWidth < 600)
+const handleResize = () => {
+    isPhone.value = window.innerWidth < 600
+}
 // Position albums around the wheel
 const albumPositions = computed(() => {
     return allAlbums.map((album, i) => {
@@ -80,7 +85,23 @@ const handleScroll = (event) => {
 }
 
 // Music player logic
-const selectedAlbum = computed(() => allAlbums[selectedIndex.value])
+const selectedAlbumPhone = ref(allAlbums[0])
+
+function selectAlbum(album) {
+  if (isPhone.value) {
+    selectedAlbumPhone.value = album
+  } else {
+    // Find index and update wheel selection
+    const idx = allAlbums.findIndex(a => a.name === album.name)
+    if (idx !== -1) selectedIndex.value = idx
+  }
+}
+
+// Use selectedAlbum for desktop, selectedAlbumPhone for phone
+const selectedAlbum = computed(() =>
+  isPhone.value ? selectedAlbumPhone.value : allAlbums[selectedIndex.value]
+)
+
 watch(selectedAlbum, (album) => {
     if (audioRef.value && album) {
         audioRef.value.src = album.audioUrl
@@ -145,8 +166,10 @@ const handleImageError = (event) => {
     event.target.src = '/covers/default-cover.jpg'
 }
 
+
 onMounted(() => {
     window.addEventListener('wheel', handleScroll, { passive: false })
+    window.addEventListener('resize', handleResize)
     if (audioRef.value) {
         audioRef.value.addEventListener('timeupdate', updateTime)
         audioRef.value.addEventListener('ended', () => {
@@ -159,6 +182,7 @@ onMounted(() => {
 })
 onUnmounted(() => {
     window.removeEventListener('wheel', handleScroll)
+    window.removeEventListener('resize', handleResize)
     if (audioRef.value) {
         audioRef.value.removeEventListener('timeupdate', updateTime)
     }
@@ -170,72 +194,72 @@ onUnmounted(() => {
 
         <!-- Hidden audio element -->
         <audio ref="audioRef" preload="metadata"></audio>
-
-        <!-- Main wheel container - positioned to show only right side -->
-        <div ref="wheelRef" class="wheel">
-            <!-- Individual album items positioned around the wheel -->
-            <div v-for="(album, index) in albumPositions" :key="`album-${album.index}`" class="wheel-item"
-                :class="{ 'selected': album.centered }" :style="{
-                    transform: `translate(-50%, -50%) translate(${album.x}px, ${album.y}px)`
-                }">
-                <div class="album-content">
-                    <div class="album-card">
-                        <h3>{{ album.name }}</h3>
+        <PhoneMusic v-if="isPhone" :selectedAlbum="selectedAlbumPhone" @select-album="selectAlbum" />
+            <!-- Main wheel container - positioned to show only right side -->
+            <div v-else ref="wheelRef" class="wheel">
+                <!-- Individual album items positioned around the wheel -->
+                <div v-for="(album, index) in albumPositions" :key="`album-${album.index}`" class="wheel-item"
+                    :class="{ 'selected': album.centered }" :style="{
+                        transform: `translate(-50%, -50%) translate(${album.x}px, ${album.y}px)`
+                    }">
+                    <div class="album-content">
+                        <div class="album-card">
+                            <h3>{{ album.name }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
-        </div>
-
-        <!-- Music Player -->
-        <div class="music-player">
-            <div class="player-header">
-                <div class="album-cover">
-                    <img v-if="selectedAlbum" :src="selectedAlbum.coverUrl" :alt="selectedAlbum.name"
-                        @error="handleImageError" />
-                </div>
-                <div class="player-info">
-                    <h3 v-if="selectedAlbum">{{ selectedAlbum.name }}</h3>
-                </div>
-            </div>
-
-            <div class="player-controls">
-                <button @click="togglePlayPause" class="play-pause-btn">
-                    <span v-if="isPlaying">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                    </span>
-                    <span v-else><svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 18V6l8 6-8 6Z" />
-                        </svg>
-                    </span>
-                </button>
-            </div>
-
-            <div class="player-progress">
-                <span class="time">{{ formatTime(currentTime) }}</span>
-                <div class="progress-bar" @click="seekTo">
-                    <div class="progress-track">
-                        <div class="progress-fill"
-                            :style="{ width: duration ? (currentTime / duration) * 100 + '%' : '0%' }"></div>
+            <!-- Music Player -->
+            <div class="music-player">
+                <div class="player-header">
+                    <div class="album-cover">
+                        <img v-if="selectedAlbum" :src="selectedAlbum.coverUrl" :alt="selectedAlbum.name"
+                            @error="handleImageError" />
+                    </div>
+                    <div class="player-info">
+                        <h3 v-if="selectedAlbum">{{ selectedAlbum.name }}</h3>
                     </div>
                 </div>
-                <span class="time">{{ formatTime(duration) }}</span>
-            </div>
 
-            <div class="volume-control">
-                <span>🔊</span>
-                <input type="range" min="0" max="1" step="0.01" v-model="volume" @input="setVolumeSlider"
-                    class="volume-slider" />
+                <div class="player-controls">
+                    <button @click="togglePlayPause" class="play-pause-btn">
+                        <span v-if="isPlaying">
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </span>
+                        <span v-else><svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="M8 18V6l8 6-8 6Z" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <div class="player-progress">
+                    <span class="time">{{ formatTime(currentTime) }}</span>
+                    <div class="progress-bar" @click="seekTo">
+                        <div class="progress-track">
+                            <div class="progress-fill"
+                                :style="{ width: duration ? (currentTime / duration) * 100 + '%' : '0%' }"></div>
+                        </div>
+                    </div>
+                    <span class="time">{{ formatTime(duration) }}</span>
+                </div>
+
+                <div class="volume-control">
+                    <span>🔊</span>
+                    <input type="range" min="0" max="1" step="0.01" v-model="volume" @input="setVolumeSlider"
+                        class="volume-slider" />
+                </div>
             </div>
         </div>
-    </div>
 </template>
 
 <style scoped>
@@ -580,11 +604,12 @@ input[type="range"].volume-slider {
         top: auto;
         bottom: 10px;
         transform: translateX(-50%);
-        width: 95vw;
-        max-width: 100vw;
-        border-radius: 16px 16px 0 0;
+        width: 80vw;
+        border-radius: 16px;
         padding: 16px 8px 24px 8px;
         box-sizing: border-box;
+        margin-bottom: 10px;
+        z-index: 0;
     }
 }
 
@@ -597,6 +622,7 @@ input[type="range"].volume-slider {
     justify-content: center;
     margin-bottom: 20px;
 }
+
 .motion-circle {
     position: absolute;
     background: #eaeaea;

@@ -8,8 +8,8 @@
       <nav>
         <router-link to="/">Home</router-link> |
         <router-link to="/ParallaxScroll">Parallax Scroll</router-link> |
-        <router-link to="/wheel">Wheel Scrolling</router-link> |
-        <router-link to="/test">test</router-link>
+        <router-link to="/wheel">Music Player</router-link> |
+        <router-link to="/test">Test</router-link>
       </nav>
     </header>
     <main>
@@ -61,5 +61,20 @@ nav a.router-link-active {
 main {
   flex: 1; /* Add spacing for the fixed header */
   padding-top: 10px; /* Add some additional padding */
+}
+
+@media screen and (max-width: 600px) {
+  .site-header {
+    height: 50px;
+    padding-top: 20px;
+  }
+
+  nav a {
+    font-size: 0.8rem;
+  }
+
+  main {
+    padding-top: 12px;
+  }
 }
 </style>
