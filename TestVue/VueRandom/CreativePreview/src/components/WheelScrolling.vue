@@ -113,11 +113,11 @@ const updateTime = () => {
 }
 const seekTo = (event) => {
     if (audioRef.value && duration.value) {
-        const rect = event.target.getBoundingClientRect()
-        const percent = (event.clientX - rect.left) / rect.width
-        const newTime = percent * duration.value
-        audioRef.value.currentTime = newTime
-        currentTime.value = newTime
+        const rect = event.currentTarget.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const newTime = percent * duration.value;
+        audioRef.value.currentTime = newTime;
+        // Remove direct assignment to currentTime, let timeupdate event handle it
     }
 }
 const formatTime = (time) => {
@@ -167,6 +167,7 @@ onUnmounted(() => {
 
 <template>
     <div class="WheelScrolling" :style="dynamicStyles">
+
         <!-- Hidden audio element -->
         <audio ref="audioRef" preload="metadata"></audio>
 
@@ -571,5 +572,38 @@ input[type="range"].volume-slider {
 .volume-slider::-ms-fill-upper {
     background: var(--secondary-color);
     border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+    .music-player {
+        left: 50%;
+        top: auto;
+        bottom: 10px;
+        transform: translateX(-50%);
+        width: 95vw;
+        max-width: 100vw;
+        border-radius: 16px 16px 0 0;
+        padding: 16px 8px 24px 8px;
+        box-sizing: border-box;
+    }
+}
+
+.motion-circles-container {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.motion-circle {
+    position: absolute;
+    background: #eaeaea;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #0006;
+    transition: box-shadow 0.3s;
+    z-index: 2;
+    touch-action: none;
 }
 </style>
