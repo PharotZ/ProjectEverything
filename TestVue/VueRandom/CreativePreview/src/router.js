@@ -3,7 +3,6 @@ import ParallaxScroll from './components/ParallaxScroll.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
 import Contact from './components/Contact.vue';
 import Fashion from './components/Fashion.vue';
-import Home from './components/Home.vue';
 
 const routes = [
     {
