@@ -18,7 +18,7 @@ function toggleOpen(idx: number) {
                 <motion.div :layout="true" :data-open="openIndex === 0" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 0 ? 'parent-github' : '']" @click="toggleOpen(0)">
                     <motion.div :data-open="openIndex === 0" :layout="true" class="child" v-html="githubIcon" />
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">Mon GitHub</a>
+                    <a href="https://github.com/PharotZ" target="_blank" rel="noopener noreferrer">Mon GitHub</a>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 1" :initial="{ borderRadius: '50px' }"
@@ -264,6 +264,9 @@ button {
         flex-direction: column;
     }
 
+    .first-half{
+        margin-top: 50px;
+    }
     .first-half,
     .second-half {
         width: 100%;

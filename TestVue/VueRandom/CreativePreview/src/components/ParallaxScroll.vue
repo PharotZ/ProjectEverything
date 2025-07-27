@@ -204,12 +204,37 @@ export default {
 }
 
 @media (max-width: 600px) {
-  .menu-container h1 {
-    font-size: 1.5rem;
-    margin-top: 100px;
-  }
   .menu-container {
-    padding-top: 40px;
+    padding-top: 30px; /* Lower the content further from the top */
+  }
+  .menu-container h1 {
+    font-size:2rem; /* Make the title smaller */
+    margin-top: 0px; /* Adjust margin for smaller screens */
+    margin-bottom: 24px;
+  }
+  .menu-items {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+  .menu-item {
+    width: 90vw;
+    min-width: 0;
+    padding: 18px 0;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    text-align: center;
+    background-color: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(59, 84, 186, 0.377);
+  }
+  .menu-item h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #475281;
+  }
+  .menu-item p {
+    display: none; /* Hide description on phone */
   }
 }
 </style>
