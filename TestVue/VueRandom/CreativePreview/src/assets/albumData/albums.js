@@ -27,5 +27,10 @@ export const allAlbums = [
     { name: "CMIYGL, Tyler the Creator", audioUrl: "/audio/LUMBERJACK.mp3",coverUrl:"/covers/CMIYGL-Tyler-the-creator.jpg" ,  },
     { name: "Chromakopia, Tyler the Creator", audioUrl: "/audio/Thought I Was Dead.mp3",coverUrl:"/covers/chromakopia-tyler-the-creator.jpeg" ,  },
     { name: "Horion, Rouhnaa", audioUrl: "/audio/H.mp3",coverUrl:"/covers/horion-rouhnaa.jpg" ,  },
-    { name: "La lueur des tréfonds, BLOODY$ANJI", audioUrl: "/audio/Bloodysanji.mp3" ,coverUrl:"/covers/LLDT-bloodysanji.jpeg" , }
+    { name: "La lueur des tréfonds, BLOODY$ANJI", audioUrl: "/audio/Bloodysanji.mp3" ,coverUrl:"/covers/LLDT-bloodysanji.jpeg" , },
+    { name: "2093, Yeat", audioUrl:"/audio/Tell Më.mp3", coverUrl:"/covers/2093-yeat.jpg" , },
+    { name: "Utopia, Travis Scott", audioUrl: "/audio/TIL FURTHER NOTICE.mp3", coverUrl:"/covers/utopia-travis-scottt.jpg" , },
+    { name: "AstroWorld, Travis Scott", audioUrl: "/audio/SKELETONS.mp3", coverUrl:"/covers/astroworld-travis-scott.jpg" , },
+    { name: "Chaos Now, Jean Dawson", audioUrl: "/audio/SICK OF IT.mp3", coverUrl:"/covers/chaos-now-jean-dawson.jpg" , },
+    { name: "Beyah, Damso", audioUrl: "/audio/Impardonnable.mp3", coverUrl:"/covers/beyah-damso.jpg" , },
 ]

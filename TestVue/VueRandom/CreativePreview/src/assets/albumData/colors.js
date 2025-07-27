@@ -27,6 +27,12 @@ export const albumColors = {
     "CMIYGL, Tyler the Creator": { primary: "#DFDEC6ff", secondary: "#75371Cff", accent: "#84C5C7ff" },
     "Chromakopia, Tyler the Creator": { primary: "#3F3E37ff", secondary: "#AFAE96ff", accent: "#03813Dff" },
     "Horion, Rouhnaa": { primary: "#79292Aff", secondary: "#875A46ff", accent: "#1F2C1Dff" },
-    "La lueur des tréfonds, BLOODY$ANJI": { primary: "#2d3436", secondary: "#636e72", accent: "#000000" }
+    "La lueur des tréfonds, BLOODY$ANJI": { primary: "#2d3436", secondary: "#636e72", accent: "#000000" },
+    "2093, Yeat": { primary: "#227e09ff", secondary: "#40ff2eff", accent: "#000000" },
+    "Utopia, Travis Scott": { primary: "#2f2a2bff", secondary: "#383838ff", accent: "#ffffffff" },
+    "AstroWorld, Travis Scott": { primary: "#fcff48ff", secondary: "#62a1ffff", accent: "#EFE602ff" },
+    "Chaos Now, Jean Dawson": { primary: "#81d0f8ff", secondary: "#7fff9fff", accent: "#40403cff" },
+    "Beyah, Damso": { primary: "#c0c0c0ff", secondary: "#d8d8d8ff", accent: "#ffffffff" },  
 }
 
+    

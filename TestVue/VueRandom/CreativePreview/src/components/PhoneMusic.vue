@@ -39,8 +39,7 @@ const offsets = [
   { x: 240, y: 240 },
   { x: -240, y: -240 },
   { x: 240, y: -240 },
-  { x: -240, y: 240 }
-
+  { x: -240, y: 240 },
 ]
 
 // Each circle gets a scale transform based on its offset from center

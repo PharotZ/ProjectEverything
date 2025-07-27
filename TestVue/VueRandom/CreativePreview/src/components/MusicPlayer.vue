@@ -157,9 +157,11 @@ const setVolume = (event) => {
 }
 const setVolumeSlider = (event) => {
     const val = parseFloat(event.target.value)
+    // Use a quadratic curve for more natural volume scaling
+    const curved = Math.pow(val, 2)
     volume.value = val
     if (audioRef.value) {
-        audioRef.value.volume = val
+        audioRef.value.volume = curved
     }
 }
 const handleImageError = (event) => {

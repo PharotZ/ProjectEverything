@@ -18,24 +18,20 @@ function toggleOpen(idx: number) {
                 <motion.div :layout="true" :data-open="openIndex === 0" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 0 ? 'parent-github' : '']" @click="toggleOpen(0)">
                     <motion.div :data-open="openIndex === 0" :layout="true" class="child" v-html="githubIcon" />
-                    <span class="icon-label">GitHub</span>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">Check ma page</a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">Mon GitHub</a>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 1" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 1 ? 'parent-instagram' : '']" @click="toggleOpen(1)">
                     <motion.div :data-open="openIndex === 1" :layout="true" class="child" v-html="instagramIcon" />
-                    <span class="icon-label">Instagram</span>
-                    <a href="https://www.instagram.com/t4xyo" target="_blank" rel="noopener noreferrer">Check ma
-                        page</a>
+                    <a href="https://www.instagram.com/t4xyo" target="_blank" rel="noopener noreferrer">Mon Instagram</a>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 2" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 2 ? 'parent-linkedin' : '']" @click="toggleOpen(2)">
                     <motion.div :data-open="openIndex === 2" :layout="true" class="child" v-html="linkedinIcon" />
-                    <span class="icon-label">LinkedIn</span>
                     <a href="https://www.linkedin.com/in/theo-baron-72944929b" target="_blank"
-                        rel="noopener noreferrer">Check ma page</a>
+                        rel="noopener noreferrer">Mon Linkedin</a>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 3" :initial="{ borderRadius: '50px' }"
