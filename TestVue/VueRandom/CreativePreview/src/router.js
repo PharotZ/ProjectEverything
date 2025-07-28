@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ParallaxScroll from './components/ParallaxScroll.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
-import Contact from './components/Contact.vue';
-import Fashion from './components/Fashion.vue';
+import Contact from './components/ContactPage.vue';
+import Fashion from './components/FashionTable.vue';
 
 const routes = [
     {

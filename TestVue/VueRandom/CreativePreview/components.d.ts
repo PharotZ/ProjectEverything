@@ -9,9 +9,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimatePresence: typeof import('motion-v')['AnimatePresence']
-    Contact: typeof import('./src/components/Contact.vue')['default']
+    Contact: typeof import('./src/components/ContactPage.vue')['default']
+    ContactPage: typeof import('./src/components/ContactPage.vue')['default']
     copy: typeof import('./src/components/WheelScrolling copy.vue')['default']
-    Fashion: typeof import('./src/components/Fashion.vue')['default']
+    Fashion: typeof import('./src/components/FashionTable.vue')['default']
+    FashionTable: typeof import('./src/components/FashionTable.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']

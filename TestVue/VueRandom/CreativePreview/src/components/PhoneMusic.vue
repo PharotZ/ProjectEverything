@@ -1,7 +1,9 @@
 <script setup>
 import { motion, useMotionValue, useTransform } from "motion-v"
 import { allAlbums } from "@/assets/albumData/albums.js"
-import { defineEmits } from "vue"
+import { defineEmits, onMounted, onUnmounted } from "vue"
+import { albumColors } from "@/assets/albumData/colors.js" // <-- Import color mapping
+
 const emit = defineEmits(['select-album'])
 const x = useMotionValue(0)
 const y = useMotionValue(0)
@@ -51,29 +53,59 @@ const circles = allAlbums.map((album, i) => {
     const dist = Math.sqrt(dx * dx + dy * dy)
     return 1 - Math.min(1, dist / 150)
   })
-  return { offset, scale, album }
+  // Get album color or fallback
+  const color = albumColors[album.name] || { primary: "#fff", accent: "#222", secondary: "#000" }
+  return { offset, scale, album, color }
 })
 
 const dragConstraints = {
-  left: -150,
-  right: 150,
-  top: -150,
-  bottom: 150
+  left: -200,
+  right: 200,
+  top: -200,
+  bottom: 200
 };
 
 function handleCircleClick(album) {
   emit('select-album', album)
 }
+
+function disableScroll() {
+  document.body.style.overflow = 'hidden'
+  document.body.style.position = 'fixed'
+  document.body.style.width = '100vw'
+  document.body.style.height = '100vh'
+}
+
+function enableScroll() {
+  document.body.style.overflow = ''
+  document.body.style.position = ''
+  document.body.style.width = ''
+  document.body.style.height = ''
+}
+
+onMounted(() => {
+  // Only apply on small screens (phones)
+  if (window.innerWidth < 600) {
+    disableScroll()
+  }
+})
+
+onUnmounted(() => {
+  enableScroll()
+})
 </script>
 
 <template>
   <div class="center-page">
     <div class="drag-container">
-      <motion.div v-for="(circle, i) in circles" 
-        :key="i" class="circle" 
-        drag 
+      <motion.div
+        v-for="(circle, i) in circles"
+        :key="i"
+        class="circle"
+        drag
         :dragConstraints="dragConstraints"
-        :motion="{ x, y, scale: circle.scale }" :style="{
+        :motion="{ x, y, scale: circle.scale }"
+        :style="{
           position: 'absolute',
           left: `calc(50% + ${circle.offset.x}px - 45px)`,
           top: `calc(50% + ${circle.offset.y}px - 45px)`,
@@ -86,10 +118,12 @@ function handleCircleClick(album) {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           borderRadius: '50%',
-          boxShadow: '0 4px 32px #0004'
-        }" 
+          border: `3px solid ${circle.color.primary}`,
+          boxShadow: `0 4px 24px 0 ${circle.color.accent}99, 0 0 0 4px ${circle.color.secondary}33`,
+          transition: 'box-shadow 0.2s, border 0.2s'
+        }"
         @click="handleCircleClick(circle.album)"
-        />
+      />
     </div>
   </div>
 </template>
@@ -101,14 +135,13 @@ body {
   background: #000000;
 }
 
-/* Center the outer container in the middle of the page */
 .center-page {
   min-height: calc(100vh - 70px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
   position: absolute;
-  margin-top: 70px; /* Start 70px from the top */
+  margin-top: 70px;
 }
 
 .drag-container {
@@ -117,5 +150,14 @@ body {
   height: 325px;
   border-radius: 50%;
   border: 2px solid var(--primary-color);
+}
+
+.circle {
+  cursor: pointer;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+.circle:active {
+  filter: brightness(0.95);
+  box-shadow: 0 4px 32px #0008, 0 0 0 6px #fff2;
 }
 </style>

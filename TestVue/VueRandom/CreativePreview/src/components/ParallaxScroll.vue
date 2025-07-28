@@ -76,12 +76,22 @@ export default {
         filter: `blur(${globeBlur}px)`
       }" />
     </div>
+    <!-- Down arrow at the bottom, fades with globe -->
+    <div class="down-arrow" :style="{ opacity: globeOpacity }">
+      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+        width="24" height="24" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z" />
+      </svg>
+    </div>
     <!-- Menu that appears after scrolling -->
-    <div class="menu-container" :style="{ opacity: menuOpacity }">
-      <h1>Welcome to Creative Preview</h1>
-      <p>Ce projet a été créé a la base dans l'idée de m'entraîner à manipuler Vue 3 et d'autres bibliothèques telles que Motion.</p>
+    <div class="menu-container" :style="{ opacity: menuOpacity, pointerEvents: menuOpacity > 0.5 ? 'auto' : 'none' }">
+      <h1>Welcome to .Prev</h1>
+      <p>Ce projet a été créé a la base dans l'idée de m'entraîner à manipuler Vue 3 et d'autres bibliothèques telles
+        que Motion.</p>
       <p>Maintenant j'ai juste envie de créer une sorte de hub qui regroupe plein de fonctionnalités</p>
-      <p>Si vous avez des suggestions n'hésitez pas à m'en faire part ! (y'a un form aussi dans la page de contact si vous voulez)</p>
+      <p>Si vous avez des suggestions n'hésitez pas à m'en faire part ! (y'a un form aussi dans la page de contact si
+        vous voulez)</p>
       <div class="menu-items">
         <router-link to="/wheel" class="menu-item">
           <h3>Music Player</h3>
@@ -105,6 +115,29 @@ export default {
 
 
 <style scoped>
+.down-arrow {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  animation: arrow-bounce 1.5s infinite;
+}
+
+@keyframes arrow-bounce {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(16px);
+  }
+}
+
 .parallax-container {
   height: 300vh;
   /* Tall container to allow scrolling */
@@ -165,7 +198,7 @@ export default {
 .menu-container h1 {
   margin-top: 70px;
   font-size: 3rem;
-  color:#475281;
+  color: #475281;
   margin-bottom: 40px;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   font-family: var(--font-headings);
@@ -193,7 +226,7 @@ export default {
 .menu-item h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color:#475281;
+  color: #475281;
   font-family: var(--font-headings);
 }
 
@@ -205,18 +238,24 @@ export default {
 
 @media (max-width: 600px) {
   .menu-container {
-    padding-top: 30px; /* Lower the content further from the top */
+    padding-top: 30px;
+    /* Lower the content further from the top */
   }
+
   .menu-container h1 {
-    font-size:2rem; /* Make the title smaller */
-    margin-top: 0px; /* Adjust margin for smaller screens */
+    font-size: 2rem;
+    /* Make the title smaller */
+    margin-top: 0px;
+    /* Adjust margin for smaller screens */
     margin-bottom: 24px;
   }
+
   .menu-items {
     flex-direction: column;
     gap: 16px;
     align-items: center;
   }
+
   .menu-item {
     width: 90vw;
     min-width: 0;
@@ -224,17 +263,20 @@ export default {
     margin: 0 auto;
     font-size: 1.1rem;
     text-align: center;
-    background-color: rgba(255,255,255,0.08);
+    background-color: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     border: 1px solid rgba(59, 84, 186, 0.377);
   }
+
   .menu-item h3 {
     font-size: 1.1rem;
     margin: 0;
     color: #475281;
   }
+
   .menu-item p {
-    display: none; /* Hide description on phone */
+    display: none;
+    /* Hide description on phone */
   }
 }
 </style>

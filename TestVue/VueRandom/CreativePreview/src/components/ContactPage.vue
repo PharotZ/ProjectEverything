@@ -1,13 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { motion } from 'motion-v'
 import { instagramIcon, githubIcon, linkedinIcon, formIcon, vueIcon, motionIcon } from '@/assets/icons'
 
 const openIndex = ref(-1)
-
-function toggleOpen(idx: number) {
+function toggleOpen(idx) {
     openIndex.value = openIndex.value === idx ? -1 : idx
 }
+
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxmnQZxiMbSn5OS_ucHtgPQ2aYc9Qgy0J5JVsa5zVCQO_35SY8H4ybfERfnVvgVmgnI/exec'
+const formRef = ref(null)
+
+onMounted(() => {
+  if (formRef.value) {
+    formRef.value.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      try {
+        await fetch(scriptURL, { method: 'POST', body: new FormData(formRef.value!) })
+        alert("Merci pour ton retour :)")
+        window.location.reload()
+      } catch (error: any) {
+        console.error('Error!', error.message)
+      }
+    })
+  }
+})
+
+onUnmounted(() => {
+  if (formRef.value) {
+    formRef.value.onsubmit = null
+  }
+})
 </script>
 
 <template>
@@ -18,29 +41,32 @@ function toggleOpen(idx: number) {
                 <motion.div :layout="true" :data-open="openIndex === 0" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 0 ? 'parent-github' : '']" @click="toggleOpen(0)">
                     <motion.div :data-open="openIndex === 0" :layout="true" class="child" v-html="githubIcon" />
-                    <a href="https://github.com/PharotZ" target="_blank" rel="noopener noreferrer">Mon GitHub</a>
+                    <h1><a href="https://github.com/PharotZ" target="_blank" rel="noopener noreferrer">Mon GitHub</a>
+                    </h1>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 1" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 1 ? 'parent-instagram' : '']" @click="toggleOpen(1)">
                     <motion.div :data-open="openIndex === 1" :layout="true" class="child" v-html="instagramIcon" />
-                    <a href="https://www.instagram.com/t4xyo" target="_blank" rel="noopener noreferrer">Mon Instagram</a>
+                    <h1><a href="https://www.instagram.com/t4xyo" target="_blank" rel="noopener noreferrer">Mon
+                            Instagram</a></h1>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 2" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 2 ? 'parent-linkedin' : '']" @click="toggleOpen(2)">
                     <motion.div :data-open="openIndex === 2" :layout="true" class="child" v-html="linkedinIcon" />
-                    <a href="https://www.linkedin.com/in/theo-baron-72944929b" target="_blank"
-                        rel="noopener noreferrer">Mon Linkedin</a>
+                    <h1><a href="https://www.linkedin.com/in/theo-baron-72944929b" target="_blank"
+                            rel="noopener noreferrer">Mon Linkedin</a></h1>
                 </motion.div>
 
                 <motion.div :layout="true" :data-open="openIndex === 3" :initial="{ borderRadius: '50px' }"
                     :class="['parent', openIndex === 3 ? 'parent-form' : '']" @click="toggleOpen(3)">
                     <motion.div :data-open="openIndex === 3" :layout="true" class="child" v-html="formIcon" />
                     <div class="parent-content">
-                        <span class="icon-label">Feedback Form</span>
-                        <form action="mailto:24theob04@gmail.com" method="post" enctype="text/plain" @click.stop>
-                            <textarea placeholder="Your feedback..." rows="4" cols="25"></textarea>
+                        <h1><span class="icon-label">Feedback Form</span></h1>
+                        <form ref="formRef" enctype="text/plain" @click.stop name="contact-form">
+                            <textarea id="nom" placeholder="Qui es-tu?" rows="1" cols="25" name="nom"></textarea>
+                            <textarea placeholder="Ton feedback..." rows="4" cols="25" name="feedback"></textarea>
                             <button type="submit">Submit</button>
                         </form>
                     </div>
@@ -55,10 +81,11 @@ function toggleOpen(idx: number) {
                     <div style="display: flex; align-items: center; flex-direction: column;">
                         <div style="display: flex; align-items: center; flex-direction: row;">
                             <motion.div :data-open="openIndex === 4" :layout="true" class="child" v-html="vueIcon" />
-                            <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><span
-                                    class="icon-label">Vue</span></a>
+                            <h1><a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><span
+                                    class="icon-label">Vue</span></a></h1>
                         </div>
-                        <p style="padding: 10px;">Vue.js est un framework JavaScript progressif. J'ai commencé à l'utiliser en cours à telecom
+                        <p style="padding: 10px;">Vue.js est un framework JavaScript progressif. J'ai commencé à
+                            l'utiliser en cours à telecom
                             et
                             ensuite durant mon projet ingénieur (maintenant mon stage).
                             Il s'agit d'un framework polyvalent et complet, mais je souhaitais de l'explorer plus en
@@ -74,11 +101,12 @@ function toggleOpen(idx: number) {
                     <div style="display: flex; align-items: center; flex-direction: column;">
                         <div style="display: flex; align-items: center; flex-direction: row;">
                             <motion.div :data-open="openIndex === 5" :layout="true" class="child" v-html="motionIcon" />
-                            <a href="https://motion.dev/docs" target="_blank" rel="noopener noreferrer"><span
-                                    class="icon-label">Motion</span></a>
+                            <h1><a href="https://motion.dev/docs" target="_blank" rel="noopener noreferrer"><span
+                                    class="icon-label">Motion</span></a></h1>
                         </div>
 
-                        <p style="padding: 10px;">Motion est une librairie de Vue.js qui permet de créer des animations fluides et
+                        <p style="padding: 10px;">Motion est une librairie de Vue.js qui permet de créer des animations
+                            fluides et
                             performantes.
                             J'ai commencé à l'utiliser afin d'animer plus simplement mes composants et de rendre
                             l'expérience utilisateur plus agréable.
@@ -194,10 +222,16 @@ textarea {
     resize: none;
 }
 
+#nom {
+    height: 40px;
+    margin-bottom: 10px;
+}
+
 form {
     display: flex;
     flex-direction: column;
 }
+
 button {
     margin-top: 10px;
     padding: 10px 20px;
@@ -246,6 +280,7 @@ button {
 .parent-vue[data-open="true"] a {
     color: #42b883;
 }
+
 .parent-motion[data-open="true"] {
     background-color: #000000;
     border: 2px solid #fffb00;
@@ -253,7 +288,7 @@ button {
     color: #fff;
 }
 
-.parent-motion[data-open="true"] a{
+.parent-motion[data-open="true"] a {
     color: #fffb00;
 }
 
@@ -264,9 +299,10 @@ button {
         flex-direction: column;
     }
 
-    .first-half{
+    .first-half {
         margin-top: 50px;
     }
+
     .first-half,
     .second-half {
         width: 100%;

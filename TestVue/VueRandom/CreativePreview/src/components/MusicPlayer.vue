@@ -5,7 +5,7 @@ import { hatch } from 'ldrs'
 import PhoneMusic from './PhoneMusic.vue'
 hatch.register()
 
-
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 const wheelRadius = 400
 const albumCount = allAlbums.length
 const angleStep = 360 / albumCount
@@ -147,14 +147,6 @@ const formatTime = (time) => {
     const seconds = Math.floor(time % 60)
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
-const setVolume = (event) => {
-    const rect = event.target.getBoundingClientRect()
-    const percent = (event.clientX - rect.left) / rect.width
-    volume.value = Math.max(0, Math.min(1, percent))
-    if (audioRef.value) {
-        audioRef.value.volume = volume.value
-    }
-}
 const setVolumeSlider = (event) => {
     const val = parseFloat(event.target.value)
     // Use a quadratic curve for more natural volume scaling
@@ -200,7 +192,7 @@ onUnmounted(() => {
             <!-- Main wheel container - positioned to show only right side -->
             <div v-else ref="wheelRef" class="wheel">
                 <!-- Individual album items positioned around the wheel -->
-                <div v-for="(album, index) in albumPositions" :key="`album-${album.index}`" class="wheel-item"
+                <div v-for="(album) in albumPositions" :key="`album-${album.index}`" class="wheel-item"
                     :class="{ 'selected': album.centered }" :style="{
                         transform: `translate(-50%, -50%) translate(${album.x}px, ${album.y}px)`
                     }">
@@ -255,7 +247,7 @@ onUnmounted(() => {
                     <span class="time">{{ formatTime(duration) }}</span>
                 </div>
 
-                <div class="volume-control">
+                <div v-if="!isIOS" class="volume-control">
                     <span>🔊</span>
                     <input type="range" min="0" max="1" step="0.01" v-model="volume" @input="setVolumeSlider"
                         class="volume-slider" />
