@@ -87,7 +87,7 @@ export default {
     <!-- Menu that appears after scrolling -->
     <div class="menu-container" :style="{ opacity: menuOpacity, pointerEvents: menuOpacity > 0.5 ? 'auto' : 'none' }">
       <h1>Welcome to .Prev</h1>
-      <p>Ce projet a été créé a la base dans l'idée de m'entraîner à manipuler Vue 3 et d'autres bibliothèques telles
+      <p>Ce projet a été créé a la base dans l'idée de m'entraîner à manipuler Vue 3 et d'autres bibliothèques tel
         que Motion.</p>
       <p>Maintenant j'ai juste envie de créer une sorte de hub qui regroupe plein de fonctionnalités</p>
       <p>Si vous avez des suggestions n'hésitez pas à m'en faire part ! (y'a un form aussi dans la page de contact si
