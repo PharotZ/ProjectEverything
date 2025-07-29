@@ -9,6 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimatePresence: typeof import('motion-v')['AnimatePresence']
+    CardStackCard: typeof import('./src/components/CardStackCard.vue')['default']
+    Carousel: typeof import('./src/components/Carousel.vue')['default']
+    CarouselComponent: typeof import('./src/components/CarouselComponent.vue')['default']
     Contact: typeof import('./src/components/ContactPage.vue')['default']
     ContactPage: typeof import('./src/components/ContactPage.vue')['default']
     copy: typeof import('./src/components/WheelScrolling copy.vue')['default']

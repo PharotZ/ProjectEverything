@@ -143,7 +143,6 @@ export default {
   /* Tall container to allow scrolling */
   position: relative;
   overflow: hidden;
-  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,11 +195,11 @@ export default {
 }
 
 .menu-container h1 {
-  margin-top: 70px;
+
   font-size: 3rem;
   color: #475281;
   margin-bottom: 40px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 10px rgba(119, 117, 197, 0.66);
   font-family: var(--font-headings);
 }
 
@@ -213,13 +212,12 @@ export default {
 }
 
 .menu-item {
-  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 25px;
   width: 300px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(0.5px);
   margin: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(119, 117, 197, 0.66);
   cursor: pointer;
 }
 

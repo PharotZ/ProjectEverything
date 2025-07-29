@@ -380,11 +380,9 @@ onUnmounted(() => {
     height: 100%;
 }
 
-.album-card {
-    background-color: rgba(0, 0, 0, 0.6);
+.album-card {   
     border-radius: 6px;
     padding: 8px 12px;
-    backdrop-filter: blur(5px);
     border: 1px solid var(--primary-color);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px var(--primary-glow);
@@ -447,6 +445,7 @@ onUnmounted(() => {
     overflow: hidden;
     border: 2px solid var(--primary-color);
     transition: border-color 0.6s ease;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .album-cover img {
@@ -489,6 +488,7 @@ onUnmounted(() => {
     font-size: 1.1rem;
     transition: color 0.6s ease;
     line-height: 1.3;
+    word-break: break-word; /* Allow wrapping */
 }
 
 .player-controls {

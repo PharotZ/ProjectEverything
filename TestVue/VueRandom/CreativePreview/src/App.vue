@@ -28,6 +28,18 @@ const route = useRoute()
   flex-direction: column;
 }
 
+.app-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  /* Dots every 32px, 2px diameter, white with a bit of transparency */
+  background: radial-gradient(circle, #fff 1px, transparent 1.5px);
+  background-size: 32px 32px;
+}
+
 .site-header {
   position: fixed;
   top: 0;
@@ -78,4 +90,6 @@ main {
     padding-top: 12px;
   }
 }
+
+
 </style>

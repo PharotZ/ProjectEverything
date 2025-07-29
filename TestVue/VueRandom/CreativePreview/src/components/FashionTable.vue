@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { motion, AnimatePresence } from 'motion-v'
+import CardStackCard from './CardStackCard.vue'
 
 const allBrands = [
   {
@@ -8,16 +9,24 @@ const allBrands = [
     facts: ["Fondée en Corée du Sud", "Design technique et expérimental", "Très populaire dans le streetwear"],
     wishlist: ["8.0 Parka Center (Black)", "DV + PAF Junya Racer Off-Black/D+ Gray Gradient"],
     shops: ["Séoul", "Online"],
+    images: [
+      "/clothes/8.0OPC-B1.webp",
+      "/clothes/JUNYA_PAF_OFFBLACK1.webp"
+    ],
     links: { website: "https://postarchivefaction.com", instagram: "https://instagram.com/postarchivefaction" }
   },
   {
     label: "MM6",
     facts: ["Maison Margiela ligne 6", "Approche déstructurée", "Célèbre pour ses accessoires innovants"],
-    wishlist: ["Sac Japanese", "Tabi Boots"],
+    wishlist: ["Sneakers ACS Pro MM6 x Salomon", "Jean droit"],
     shops: ["Paris", "Tokyo", "Online"],
+    images: [
+      "/clothes/SalomonMM6.jpg",
+      "/clothes/JeanDroit.jpg"
+    ],
     links: { website: "https://maisonmargiela.com/en-us/mm6", instagram: "https://instagram.com/mm6maisonmargiela" }
   },
-{
+  {
     label: "Badson",
     facts: ["Marque émergente", "Focus sur la qualité et le minimalisme"],
     wishlist: ["“SPEAKER” (2024)", "CHERRY BLOSSOM ‘OVERGROWTH’ DENIM PANTS"],
@@ -70,6 +79,21 @@ const allBrands = [
 
 const tabs = allBrands
 const selectedTab = ref(tabs[0])
+const showVisuels = ref(false)
+const visuelCards = ref([])
+
+watch(
+  () => showVisuels.value,
+  (open) => {
+    if (open && selectedTab.value && selectedTab.value.images && selectedTab.value.images.length) {
+      visuelCards.value = selectedTab.value.images.map((url, i) => ({ id: i + 1, url }))
+    }
+  }
+)
+
+function removeVisuelCard(id) {
+  visuelCards.value = visuelCards.value.filter(card => card.id !== id)
+}
 </script>
 
 <template>
@@ -89,7 +113,8 @@ const selectedTab = ref(tabs[0])
       <main class="dashboard-container">
         <AnimatePresence mode="wait">
           <motion.div :key="selectedTab ? selectedTab.label : 'empty'" :initial="{ y: 10, opacity: 0 }"
-            :animate="{ y: 0, opacity: 1 }" :exit="{ y: -10, opacity: 0 }" :transition="{ duration: 0.2 }" class="brand-dashboard">
+            :animate="{ y: 0, opacity: 1 }" :exit="{ y: -10, opacity: 0 }" :transition="{ duration: 0.2 }"
+            class="brand-dashboard">
             <div class="dashboard-grid">
               <section class="dashboard-corner">
                 <h3>À savoir</h3>
@@ -125,10 +150,36 @@ const selectedTab = ref(tabs[0])
                 </ul>
                 <span v-else>Aucun lien disponible.</span>
               </section>
+              <section class="dashboard-corner">
+                <button class="visuels-btn" @click="showVisuels = true">
+                  Voir les visuels
+                </button>
+              </section>
             </div>
           </motion.div>
         </AnimatePresence>
       </main>
+      <!-- Section visuels à part -->
+      <div v-if="showVisuels" class="visuels-modal">
+        <button class="close-btn" @click="showVisuels = false">Fermer</button>
+        <h3>Visuels de {{ selectedTab.label }}</h3>
+        <div v-if="selectedTab && selectedTab.images && selectedTab.images.length">
+          <div class="card-stack-bg">
+            <div class="card-stack">
+              <CardStackCard
+                v-for="(card, idx) in visuelCards"
+                :key="card.id"
+                :card="card"
+                :is-front="card.id === visuelCards[visuelCards.length - 1]?.id"
+                :index="visuelCards.length - 1 - idx"
+                @swipe="removeVisuelCard"
+              />
+              <div v-if="visuelCards.length === 0" class="no-more-cards">Plus de visuels !</div>
+            </div>
+          </div>
+        </div>
+        <span v-else>Aucun visuel pour l’instant.</span>
+      </div>
     </div>
   </div>
 </template>
@@ -140,8 +191,10 @@ const selectedTab = ref(tabs[0])
   align-items: center;
   min-height: 100vh;
   width: 100vw;
-  height: 100vh; /* Fix vertical scroll */
-  overflow: hidden; /* Prevent scrolling */
+  height: 100vh;
+  /* Fix vertical scroll */
+  overflow: hidden;
+  /* Prevent scrolling */
   margin-top: 50px;
 }
 
@@ -156,7 +209,8 @@ const selectedTab = ref(tabs[0])
   display: flex;
   flex-direction: column;
   padding: 0;
-  margin-top: 0; /* Remove margin to fix scroll */
+  margin-top: 0;
+  /* Remove margin to fix scroll */
 }
 
 .nav {
@@ -177,7 +231,8 @@ const selectedTab = ref(tabs[0])
   font-weight: 500;
   font-size: 14px;
   display: flex;
-  width: auto; /* <-- Fix: let tabs grow only as needed */
+  width: auto;
+  /* <-- Fix: let tabs grow only as needed */
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -190,6 +245,7 @@ const selectedTab = ref(tabs[0])
   background: #22263a;
   border-radius: 4px;
 }
+
 .tabs-container::-webkit-scrollbar-thumb {
   background: #475281;
   border-radius: 4px;
@@ -213,7 +269,8 @@ const selectedTab = ref(tabs[0])
   transition: background 0.2s, color 0.2s;
   white-space: nowrap;
   min-width: 0;
-  flex: none; /* <-- Fix: tabs only as wide as their content */
+  flex: none;
+  /* <-- Fix: tabs only as wide as their content */
   width: auto;
 }
 
@@ -298,22 +355,107 @@ const selectedTab = ref(tabs[0])
   word-break: break-all;
 }
 
+.visuels-btn {
+  background: #42b883;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background 0.2s;
+}
+
+.visuels-btn:hover {
+  background: #369e6f;
+}
+
+.visuels-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.visuel-img {
+  flex: 1 1 calc(50% - 12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+  height: 0;
+  padding-top: 100%;
+  /* Aspect ratio 1:1 */
+}
+
+.visuel-img img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid #475281;
+  background: #181c1f;
+}
+
+.visuels-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 28, 31, 0.98);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 60px;
+  overflow-y: auto;
+}
+
+.visuels-modal h3 {
+  color: #42b883;
+  margin-bottom: 18px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  background: #23263a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background: #475281;
+}
+
 @media (max-width: 600px) {
   .table-container {
-    width:96vw;
+    width: 96vw;
   }
+
   .container {
     height: 100vh;
     padding: 0;
   }
+
   .nav {
     height: auto;
     padding: 2px 2px 0;
   }
+
   .tab {
     font-size: 13px;
     padding: 8px 8px;
   }
+
   .icon {
     font-size: 64px;
   }
@@ -324,6 +466,7 @@ const selectedTab = ref(tabs[0])
     max-width: 98vw;
     padding: 12px 2vw;
   }
+
   .dashboard-grid {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, auto);
