@@ -163,42 +163,51 @@ const handleImageError = (event) => {
 const dragging = ref(false)
 const lastX = ref(0)
 const lastRotation = ref(0)
+const wheelRef = ref(null)
+const dragSide = ref(1) // 1 for right, -1 for left
 
 function onWheelMouseDown(e) {
     dragging.value = true
-    lastX.value = e.clientY // Use Y for vertical drag
+    lastX.value = e.clientY
     lastRotation.value = rotation.value
+
+    // Detect left or right of wheel center
+    const rect = wheelRef.value.getBoundingClientRect()
+    dragSide.value = (e.clientX < rect.left + rect.width / 2) ? -1 : 1
+
     window.addEventListener('mousemove', onWheelMouseMove)
     window.addEventListener('mouseup', onWheelMouseUp)
 }
 
 function onWheelMouseMove(e) {
     if (!dragging.value) return
-    const deltaY = e.clientY - lastX.value // Use Y for vertical drag
-    rotation.value = (lastRotation.value + deltaY * 0.2) % 360 // Adjust sensitivity as needed
+    const deltaY = e.clientY - lastX.value
+    rotation.value = (lastRotation.value + deltaY * 0.3 * dragSide.value) % 360
     updateSelectedIndex()
 }
-
 function onWheelMouseUp() {
     dragging.value = false
     window.removeEventListener('mousemove', onWheelMouseMove)
     window.removeEventListener('mouseup', onWheelMouseUp)
 }
-
 // Touch support
 function onWheelTouchStart(e) {
     if (e.touches.length !== 1) return
     dragging.value = true
-    lastX.value = e.touches[0].clientY // Use Y for vertical drag
+    lastX.value = e.touches[0].clientY
     lastRotation.value = rotation.value
+
+    const rect = wheelRef.value.getBoundingClientRect()
+    dragSide.value = (e.touches[0].clientX < rect.left + rect.width / 2) ? -1 : 1
+
     window.addEventListener('touchmove', onWheelTouchMove)
     window.addEventListener('touchend', onWheelTouchEnd)
 }
 
 function onWheelTouchMove(e) {
     if (!dragging.value || e.touches.length !== 1) return
-    const deltaY = e.touches[0].clientY - lastX.value // Use Y for vertical drag
-    rotation.value = (lastRotation.value + deltaY * 0.2) % 360
+    const deltaY = e.touches[0].clientY - lastX.value
+    rotation.value = (lastRotation.value + deltaY * 0.3 * dragSide.value) % 360
     updateSelectedIndex()
 }
 
@@ -307,6 +316,12 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.album-card,
+.album-card * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
 .WheelScrolling {
     height: 98vh;
     width: 100%;
