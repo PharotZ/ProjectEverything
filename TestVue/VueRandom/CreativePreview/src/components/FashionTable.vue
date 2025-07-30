@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { motion, AnimatePresence } from 'motion-v'
-import CardStackCard from './CardStackCard.vue'
 
 const allBrands = [
   {
@@ -83,17 +82,15 @@ const showVisuels = ref(false)
 const visuelCards = ref([])
 
 watch(
-  () => showVisuels.value,
-  (open) => {
-    if (open && selectedTab.value && selectedTab.value.images && selectedTab.value.images.length) {
-      visuelCards.value = selectedTab.value.images.map((url, i) => ({ id: i + 1, url }))
+  [() => showVisuels.value, () => selectedTab.value],
+  ([open, tab]) => {
+    if (open && tab && tab.images && tab.images.length) {
+      visuelCards.value = tab.images.map((url, i) => ({ id: i + 1, url }))
+      console.log(visuelCards.value.length)
     }
-  }
+  },
+  { immediate: true }
 )
-
-function removeVisuelCard(id) {
-  visuelCards.value = visuelCards.value.filter(card => card.id !== id)
-}
 </script>
 
 <template>
@@ -150,7 +147,7 @@ function removeVisuelCard(id) {
                 </ul>
                 <span v-else>Aucun lien disponible.</span>
               </section>
-              <section class="dashboard-corner">
+              <section class="dashboard-corner dashboard-visuels-btn">
                 <button class="visuels-btn" @click="showVisuels = true">
                   Voir les visuels
                 </button>
@@ -163,22 +160,6 @@ function removeVisuelCard(id) {
       <div v-if="showVisuels" class="visuels-modal">
         <button class="close-btn" @click="showVisuels = false">Fermer</button>
         <h3>Visuels de {{ selectedTab.label }}</h3>
-        <div v-if="selectedTab && selectedTab.images && selectedTab.images.length">
-          <div class="card-stack-bg">
-            <div class="card-stack">
-              <CardStackCard
-                v-for="(card, idx) in visuelCards"
-                :key="card.id"
-                :card="card"
-                :is-front="card.id === visuelCards[visuelCards.length - 1]?.id"
-                :index="visuelCards.length - 1 - idx"
-                @swipe="removeVisuelCard"
-              />
-              <div v-if="visuelCards.length === 0" class="no-more-cards">Plus de visuels !</div>
-            </div>
-          </div>
-        </div>
-        <span v-else>Aucun visuel pour l’instant.</span>
       </div>
     </div>
   </div>
@@ -314,7 +295,7 @@ function removeVisuelCard(id) {
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto auto auto;
   gap: 24px;
 }
 
@@ -436,6 +417,23 @@ function removeVisuelCard(id) {
   background: #475281;
 }
 
+.card-stack-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh; /* or 100vh if you want full height */
+  width: 100%;
+}
+
+.card-stack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  width: 320px;
+  position: relative;
+}
+
 @media (max-width: 600px) {
   .table-container {
     width: 96vw;
@@ -472,5 +470,9 @@ function removeVisuelCard(id) {
     grid-template-rows: repeat(4, auto);
     gap: 16px;
   }
+}
+
+.dashboard-visuels-btn {
+  grid-column: 1 / span 2;
 }
 </style>
