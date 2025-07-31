@@ -218,7 +218,7 @@ textarea {
     border-radius: 5px;
     background-color: #000000;
     color: white;
-    border: 2px solid #475281;
+    border: 2px dotted #475281;
     resize: none;
 }
 
@@ -238,41 +238,41 @@ button {
     border-radius: 5px;
     background-color: #000000;
     color: white;
-    border: 2px solid #475281;
+    border: 2px dotted #475281;
     cursor: pointer;
 }
 
 .parent-github[data-open="true"] {
     background-color: #000000;
-    border: 2px solid #475281;
+    border: 2px dotted #475281;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
 .parent-instagram[data-open="true"] {
     background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-    border: 2px solid #ffffff;
+    border: 2px dotted #ffffff;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
 .parent-linkedin[data-open="true"] {
     background-color: #4143d3;
-    border: 2px solid #ffffff;
+    border: 2px dotted #ffffff;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
 .parent-form[data-open="true"] {
     background-color: #000000;
-    border: 2px solid #95a8ff;
+    border: 2px dotted #95a8ff;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
 .parent-vue[data-open="true"] {
     background-color: #000000;
-    border: 2px solid #42b883;
+    border: 2px dotted #42b883;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
@@ -283,7 +283,7 @@ button {
 
 .parent-motion[data-open="true"] {
     background-color: #000000;
-    border: 2px solid #fffb00;
+    border: 2px dotted #fffb00;
     box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
     color: #fff;
 }

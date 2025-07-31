@@ -118,7 +118,7 @@ onUnmounted(() => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           borderRadius: '50%',
-          border: `3px solid ${circle.color.primary}`,
+          border: `3px dotted ${circle.color.primary}`,
           boxShadow: `0 4px 24px 0 ${circle.color.accent}99, 0 0 0 4px ${circle.color.secondary}33`,
           transition: 'box-shadow 0.2s, border 0.2s'
         }"
@@ -149,7 +149,7 @@ body {
   width: 325px;
   height: 325px;
   border-radius: 50%;
-  border: 2px solid var(--primary-color);
+  border: 2px dotted var(--primary-color);
 }
 
 .circle {

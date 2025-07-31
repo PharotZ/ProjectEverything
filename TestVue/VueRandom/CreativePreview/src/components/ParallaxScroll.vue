@@ -217,7 +217,7 @@ export default {
   width: 300px;
   backdrop-filter: blur(0.5px);
   margin: 10px;
-  border: 1px solid rgba(119, 117, 197, 0.66);
+  border: 2px dotted rgba(119, 117, 197, 0.66);
   cursor: pointer;
 }
 
@@ -263,7 +263,7 @@ export default {
     text-align: center;
     background-color: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    border: 1px solid rgba(59, 84, 186, 0.377);
+    border: 2px dotted rgba(59, 84, 186, 0.377);
   }
 
   .menu-item h3 {

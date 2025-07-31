@@ -383,7 +383,7 @@ onUnmounted(() => {
 .album-card {   
     border-radius: 6px;
     padding: 8px 12px;
-    border: 1px solid var(--primary-color);
+    border: 2px dotted var(--primary-color);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px var(--primary-glow);
     display: inline-block;
@@ -419,7 +419,7 @@ onUnmounted(() => {
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.9);
-    border: 1px solid var(--primary-color);
+    border: 2px dotted var(--primary-color);
     border-radius: 12px;
     padding: 20px;
     backdrop-filter: blur(10px);
@@ -443,7 +443,7 @@ onUnmounted(() => {
     height: 80px;
     border-radius: 8px;
     overflow: hidden;
-    border: 2px solid var(--primary-color);
+    border: 2px dotted var(--primary-color);
     transition: border-color 0.6s ease;
     flex-shrink: 0; /* Prevent shrinking */
 }
@@ -617,7 +617,7 @@ input[type="range"].volume-slider {
     height: 12px;
     border-radius: 50%;
     background: var(--accent-color);
-    border: 2px solid var(--primary-color);
+    border: 2px dotted var(--primary-color);
     box-shadow: 0 0 6px var(--primary-glow);
     cursor: pointer;
     transition: background 0.3s;
@@ -634,7 +634,7 @@ input[type="range"].volume-slider {
     height: 12px;
     border-radius: 50%;
     background: var(--accent-color);
-    border: 2px solid var(--primary-color);
+    border: 2px dotted var(--primary-color);
     box-shadow: 0 0 6px var(--primary-glow);
     cursor: pointer;
     transition: background 0.3s;

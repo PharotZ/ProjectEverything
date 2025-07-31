@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { motion, AnimatePresence } from 'motion-v'
 
 const allBrands = [
@@ -30,34 +30,54 @@ const allBrands = [
     facts: ["Marque émergente", "Focus sur la qualité et le minimalisme"],
     wishlist: ["“SPEAKER” (2024)", "CHERRY BLOSSOM ‘OVERGROWTH’ DENIM PANTS"],
     shops: ["Paris", "Online"],
+    images: [
+      "/clothes/SPEAKER.jpeg",
+      "/clothes/CherryBlossom.webp"
+    ],
     links: { website: "https://badson.us", instagram: "https://instagram.com/badson.us" }
   },
   {
     label: "Projectisr",
-    facts: ["Designs avant-gardistes", "Petite production, pièces uniques"],
+    facts: ["Designs avant-gardistes"],
     wishlist: ["Chemise oversize", "Pantalon Projectisr"],
     shops: ["Séoul", "Online"],
+    images: [
+      "/clothes/Distressed.webp",
+      "/clothes/Asymetric.webp"
+    ],
     links: { website: "https://projectisr.com", instagram: "https://instagram.com/projectisr_official" }
   },
   {
     label: "Racerworldwide",
-    facts: ["Inspirée par la course automobile", "Couleurs vives et logos forts"],
+    facts: ["Y2K & Grunge", "Jeans, fourrures et vestes"],
     wishlist: ["Veste Racing", "T-shirt logo"],
     shops: ["Londres", "Online"],
+    images: [
+      "/clothes/CamoGilet.webp",
+      "/clothes/GoldEarpods.webp",
+      "/clothes/RustDenim.webp"
+    ],
     links: { website: "https://racerworldwide.com", instagram: "https://instagram.com/racerworldwide" }
   },
   {
     label: "kuurth",
-    facts: ["Esthétique futuriste", "Utilisation de matériaux techniques"],
+    facts: ["Esthétique médiévale", "Silverware"],
     wishlist: ["Veste tech", "Pantalon cargo"],
     shops: ["Berlin", "Online"],
+    images: [
+      "/clothes/Baco.png",
+      "/clothes/Ecstasy.png"
+    ],
     links: { website: "https://kuurth.com", instagram: "https://instagram.com/kuurth.co" }
   },
   {
     label: "hillllside",
-    facts: ["Influence outdoor", "Couleurs naturelles et coupes larges"],
+    facts: ["Influence outdoor", "Vestes techniques"],
     wishlist: ["Invisibility Jacket"],
     shops: ["Genève", "Online"],
+    images: [
+      "/clothes/Invisibility.png",
+    ],
     links: { website: "https://hillsidestudio.store/?fbclid=PAZXh0bgNhZW0CMTEAAadvxG_E9Ot88DOR7KiVgQTcZyLUx7Ti4DYhLyFUFQET-KL2eS3Q6i56So4YZA_aem_1PA6Yhq__niGXG5boXEQcw", instagram: "https://instagram.com/hillllside" }
   },
   {
@@ -65,6 +85,12 @@ const allBrands = [
     facts: ["Créateur indépendant", "Pièces faites main"],
     wishlist: ["Distrortion Tall Boots RSRV"],
     shops: ["Strasbourg", "Online"],
+    images: [
+      "/clothes/DistrortionBoot.webp",
+      "/clothes/DistortionJacket.jpg",
+      "/clothes/DistortionStraitJacket.webp",
+      "/clothes/FractureRing.webp"
+    ],
     links: { website: "https://leonmanuelblanck.shop", instagram: "https://instagram.com/leonmanuelblanck" }
   },
   {
@@ -72,6 +98,10 @@ const allBrands = [
     facts: ["Style urbain", "Créé par l'artiste Cherifkhris"],
     wishlist: ["Dot Jacket", "Cardigan TAIDHTH"],
     shops: ["Online"],
+    images: [
+      "/clothes/DotJacket.png",
+      "/clothes/TAHDITH.png"
+    ],
     links: { website: "https://julid1101.com", instagram: "https://instagram.com/julid1101" }
   }
 ]
@@ -79,18 +109,25 @@ const allBrands = [
 const tabs = allBrands
 const selectedTab = ref(tabs[0])
 const showVisuels = ref(false)
-const visuelCards = ref([])
+const imageIndex = ref(0)
 
-watch(
-  [() => showVisuels.value, () => selectedTab.value],
-  ([open, tab]) => {
-    if (open && tab && tab.images && tab.images.length) {
-      visuelCards.value = tab.images.map((url, i) => ({ id: i + 1, url }))
-      console.log(visuelCards.value.length)
-    }
-  },
-  { immediate: true }
-)
+function openVisuels() {
+  imageIndex.value = 0
+  showVisuels.value = true
+}
+
+function nextImage() {
+  if (!selectedTab.value.images) return
+  imageIndex.value = (imageIndex.value + 1) % selectedTab.value.images.length
+}
+
+function prevImage() {
+  if (!selectedTab.value.images) return
+  imageIndex.value =
+    (imageIndex.value - 1 + selectedTab.value.images.length) % selectedTab.value.images.length
+}
+
+
 </script>
 
 <template>
@@ -148,7 +185,7 @@ watch(
                 <span v-else>Aucun lien disponible.</span>
               </section>
               <section class="dashboard-corner dashboard-visuels-btn">
-                <button class="visuels-btn" @click="showVisuels = true">
+                <button class="visuels-btn" @click="openVisuels">
                   Voir les visuels
                 </button>
               </section>
@@ -160,6 +197,17 @@ watch(
       <div v-if="showVisuels" class="visuels-modal">
         <button class="close-btn" @click="showVisuels = false">Fermer</button>
         <h3>Visuels de {{ selectedTab.label }}</h3>
+        <div v-if="selectedTab.images && selectedTab.images.length" class="carousel">
+          <button class="carousel-btn" @click="prevImage">&#8592;</button>
+          <div class="carousel-mid">
+            <div class="carousel-image">
+              <img :src="selectedTab.images[imageIndex]" alt="Visuel" />
+            </div>
+            <div class="carousel-count">{{ imageIndex + 1 }} / {{ selectedTab.images.length }}</div>
+          </div>
+          <button class="carousel-btn" @click="nextImage">&#8594;</button>
+        </div>
+        <div v-else>Aucun visuel disponible.</div>
       </div>
     </div>
   </div>
@@ -168,23 +216,22 @@ watch(
 <style>
 .table-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 95vh;
   width: 100vw;
-  height: 100vh;
+  height: 95vh;
   /* Fix vertical scroll */
   overflow: hidden;
   /* Prevent scrolling */
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .container {
-  width: 100vw;
-  height: 100vh;
+  width: 95vw;
   max-width: 100vw;
   max-height: 100vh;
-  border-radius: 0;
+  border: 2px dotted #475281;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: none;
   display: flex;
@@ -195,13 +242,12 @@ watch(
 }
 
 .nav {
-  background: #22263a;
-  padding: 5px 5px 0;
   border-radius: 10px 10px 0 0;
-  border-bottom: 1px solid #475281;
+  border-bottom: 1px dotted #475281;
   min-height: 44px;
   max-width: 100vw;
   overflow-x: auto;
+  overflow-y: hidden;
   flex-shrink: 0;
 }
 
@@ -213,6 +259,7 @@ watch(
   font-size: 14px;
   display: flex;
   width: auto;
+  overflow-y: hidden;
   /* <-- Fix: let tabs grow only as needed */
   min-width: 0;
   overflow-x: auto;
@@ -256,13 +303,12 @@ watch(
 }
 
 .tab:hover {
-  background: #2c3150;
-  color: #42b883;
+  color: #b7ac0f;
 }
 
 .tab[style*="background-color: rgb(238, 238, 238)"] {
-  background: #475281 !important;
-  color: #42b883 !important;
+  background-color: #000 !important;
+  color: #b7ac0f !important;
 }
 
 .underline {
@@ -278,18 +324,22 @@ watch(
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1;
-  background: #181c1f;
+  margin:10px;
 }
 
 .brand-dashboard {
-  background: #22263a;
+  background: none;         /* Plus de fond */
   border-radius: 16px;
   padding: 32px 24px;
   min-width: 260px;
-  max-width: 700px;
-  box-shadow: 0 4px 32px #0004;
-  margin: 0 auto;
+  max-width: 600px;         /* Moins large */
+  width: 600px;
+  box-shadow: none;         /* Plus d'ombre */
+  height: fit-content;             /* Plus haut */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: 2px dotted #475281;
 }
 
 .dashboard-grid {
@@ -300,7 +350,7 @@ watch(
 }
 
 .dashboard-corner {
-  background: #23263a;
+  border:2px dotted #475281;
   border-radius: 10px;
   padding: 18px 14px;
   color: #fff;
@@ -311,10 +361,9 @@ watch(
 }
 
 .dashboard-corner h3 {
-  color: #42b883;
+  color: #ffffff;
   font-size: 1.1rem;
   margin-bottom: 10px;
-  font-family: var(--font-headings, 'Montserrat', sans-serif);
 }
 
 .dashboard-corner ul {
@@ -331,25 +380,23 @@ watch(
 }
 
 .dashboard-corner a {
-  color: #42b883;
+  color: #b7ac0f;
   text-decoration: underline;
   word-break: break-all;
 }
 
 .visuels-btn {
-  background: #42b883;
+  border:2px dotted #b7ac0f;
   color: #fff;
-  border: none;
   border-radius: 6px;
   padding: 10px 18px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: auto;
   transition: background 0.2s;
 }
 
 .visuels-btn:hover {
-  background: #369e6f;
+  background: #475281;
 }
 
 .visuels-list {
@@ -377,7 +424,7 @@ watch(
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1.5px solid #475281;
+  border: 2.5px solid #475281;
   background: #181c1f;
 }
 
@@ -390,16 +437,16 @@ watch(
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 60px;
+  padding-top: 30px;
   overflow-y: auto;
 }
 
 .visuels-modal h3 {
-  color: #42b883;
+  color: #a8b842;
   margin-bottom: 18px;
 }
 
-.close-btn {
+.close-btn {  
   position: absolute;
   top: 24px;
   right: 32px;
@@ -421,7 +468,8 @@ watch(
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh; /* or 100vh if you want full height */
+  min-height: 70vh;
+  /* or 100vh if you want full height */
   width: 100%;
 }
 
@@ -432,6 +480,68 @@ watch(
   height: 420px;
   width: 320px;
   position: relative;
+}
+
+/* Carousel styles */
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.carousel-image {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Ajout du fond à pois */
+  background:
+    radial-gradient(circle, #475281 0.5px, transparent 1px),
+    radial-gradient(circle, #475281 0.5px, transparent 1px);
+  background-size: 12px 12px;
+  background-position: 10px 10px, 6px 6px;
+  border-radius: 20%;
+  padding: 32px;
+}
+
+.carousel-image img {
+  display: block;
+  max-width: 90vw;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 3px dotted #475281 ;
+  /* Bordure plus visible */
+  background: #181c1f;
+  box-shadow: 0 2px 12px #0002;
+}
+
+.carousel-count {
+  margin-top: 8px;
+  color: #fff;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.carousel-btn {
+  background: #23263a;
+  color: #42b883;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.carousel-btn:hover {
+  background: #475281;
 }
 
 @media (max-width: 600px) {
