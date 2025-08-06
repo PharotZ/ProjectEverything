@@ -6,50 +6,50 @@ export default {
     const globe = ref(null)
     const scrollY = ref(0)
 
-    // Constants for animation thresholds
+    // Détection de la taille d'écran
+    const isSmallScreen = computed(() => window.innerHeight < 600)
+
+    // Constants for animation thresholds - ajustés pour petits écrans
     const START_SCALE = 1
     const MAX_SCALE = 1.8
-    const FADE_START = 200
-    const FADE_END = 600
-    const MENU_APPEAR = 400
+    const FADE_START = computed(() => isSmallScreen.value ? 100 : 200)
+    const FADE_END = computed(() => isSmallScreen.value ? 300 : 600)
+    const MENU_APPEAR = computed(() => isSmallScreen.value ? 150 : 400)
 
     // Calculate globe scale based on scroll position
     const globeScale = computed(() => {
-      // Start at 1, grow to MAX_SCALE as scroll increases
       return Math.min(MAX_SCALE, START_SCALE + (scrollY.value * 0.002))
     })
+
     // Calculate blur effect on globe
     const globeBlur = computed(() => {
-      if (scrollY.value < FADE_START) return 0
-      // Add blur effect as globe fades out
-      return Math.min(10, (scrollY.value - FADE_START) / 20)
+      if (scrollY.value < FADE_START.value) return 0
+      return Math.min(10, (scrollY.value - FADE_START.value) / 20)
     })
 
     // Calculate globe opacity based on scroll position
     const globeOpacity = computed(() => {
-      if (scrollY.value < FADE_START) return 1
-      if (scrollY.value > FADE_END) return 0
-      // Gradually fade out between FADE_START and FADE_END
-      return 1 - ((scrollY.value - FADE_START) / (FADE_END - FADE_START))
+      if (scrollY.value < FADE_START.value) return 1
+      if (scrollY.value > FADE_END.value) return 0
+      return 1 - ((scrollY.value - FADE_START.value) / (FADE_END.value - FADE_START.value))
     })
 
     // Calculate menu opacity based on scroll position
     const menuOpacity = computed(() => {
-      if (scrollY.value < MENU_APPEAR) return 0
-      if (scrollY.value > FADE_END) return 1
-      // Gradually fade in between MENU_APPEAR and FADE_END
-      return (scrollY.value - MENU_APPEAR) / (FADE_END - MENU_APPEAR)
-    })    // Update scroll position
+      if (scrollY.value < MENU_APPEAR.value) return 0
+      if (scrollY.value > FADE_END.value) return 1
+      return (scrollY.value - MENU_APPEAR.value) / (FADE_END.value - MENU_APPEAR.value)
+    })
+
+    // Update scroll position
     const handleScroll = () => {
       scrollY.value = window.scrollY
-      console.log('Scrolling, Y:', scrollY.value)
     }
 
     onMounted(() => {
-      // Reset scroll position when component is mounted
       window.scrollTo(0, 0)
       window.addEventListener('scroll', handleScroll)
-      handleScroll() // Initialize on mount
+      handleScroll()
     })
 
     onUnmounted(() => {
@@ -275,6 +275,127 @@ export default {
   .menu-item p {
     display: none;
     /* Hide description on phone */
+  }
+}
+
+/* Media query pour tablettes et téléphones en mode horizontal */
+@media (max-height: 600px) and (orientation: landscape) {
+  .parallax-container {
+    height: 200vh; /* Réduit la hauteur pour moins de scroll */
+    margin-top: -20px;
+    padding-top: 20px;
+  }
+
+  .globe-container {
+    top: 20px;
+    height: calc(100vh - 20px);
+  }
+
+  .globe {
+    max-width: 50%; /* Globe plus petit en mode paysage */
+    max-height: 60vh;
+  }
+
+  .menu-container {
+    top: 20px;
+    height: calc(100vh - 20px);
+    padding: 10px;
+    justify-content: flex-start; /* Aligne le contenu vers le haut */
+    padding-top: 20px;
+  }
+
+  .menu-container h1 {
+    font-size: 2rem; /* Titre plus petit */
+    margin-bottom: 20px;
+  }
+
+  .menu-container p {
+    font-size: 0.9rem; /* Texte plus petit */
+    margin-bottom: 8px;
+    display: none; /* Cache les paragraphes descriptifs pour gagner de l'espace */
+  }
+
+  .menu-items {
+    gap: 15px;
+    max-width: 100%;
+    margin-top: 10px;
+  }
+
+  .menu-item {
+    width: 200px; /* Plus petit */
+    padding: 15px;
+    margin: 5px;
+  }
+
+  .menu-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+
+  .menu-item p {
+    display: block; /* Réaffiche les descriptions des items */
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .down-arrow {
+    bottom: 5px;
+  }
+
+  /* Ajustements spécifiques pour les très petites hauteurs */
+  @media (max-height: 450px) {
+    .menu-container h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .menu-items {
+      gap: 10px;
+    }
+    
+    .menu-item {
+      width: 180px;
+      padding: 10px;
+    }
+    
+    .menu-item h3 {
+      font-size: 1rem;
+    }
+    
+    .menu-item p {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+/* Media query spécifique pour les téléphones en mode horizontal */
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .menu-container {
+    padding-top: 10px;
+  }
+  
+  .menu-container h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .menu-items {
+    flex-direction: row; /* Garde les items en ligne */
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .menu-item {
+    width: 150px;
+    padding: 12px;
+  }
+  
+  .menu-item h3 {
+    font-size: 1rem;
+  }
+  
+  .menu-item p {
+    font-size: 0.75rem;
   }
 }
 </style>

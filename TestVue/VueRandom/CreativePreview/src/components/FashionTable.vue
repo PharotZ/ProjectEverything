@@ -86,7 +86,7 @@ const allBrands = [
     wishlist: ["Distrortion Tall Boots RSRV"],
     shops: ["Strasbourg", "Online"],
     images: [
-      "/clothes/DistrortionBoot.webp",
+      "/clothes/DistortionBoot.webp",
       "/clothes/DistortionJacket.jpg",
       "/clothes/DistortionStraitJacket.webp",
       "/clothes/FractureRing.webp"
@@ -157,6 +157,7 @@ function prevImage() {
                 </ul>
                 <span v-else>Aucune information disponible.</span>
               </section>
+              
               <section class="dashboard-corner">
                 <h3>Wishlist</h3>
                 <ul v-if="selectedTab && selectedTab.wishlist">
@@ -164,26 +165,31 @@ function prevImage() {
                 </ul>
                 <span v-else>Rien pour l'instant.</span>
               </section>
-              <section class="dashboard-corner">
-                <h3>Shops</h3>
-                <ul v-if="selectedTab && selectedTab.shops">
-                  <li v-for="shop in selectedTab.shops" :key="shop">{{ shop }}</li>
-                </ul>
-                <span v-else>Aucun shop connu.</span>
-              </section>
-              <section class="dashboard-corner">
-                <h3>Liens</h3>
-                <ul v-if="selectedTab && selectedTab.links">
-                  <li v-if="selectedTab.links.website">
-                    <a :href="selectedTab.links.website" target="_blank" rel="noopener">Site officiel</a>
-                  </li>
-                  <li v-if="selectedTab.links.instagram">
-                    <a :href="selectedTab.links.instagram" target="_blank" rel="noopener">Instagram</a>
-                  </li>
-                  <!-- Ajoute d'autres liens si besoin -->
-                </ul>
-                <span v-else>Aucun lien disponible.</span>
-              </section>
+
+              <!-- Conteneur pour shops et liens côte à côte sur mobile -->
+              <div class="shops-links-container">
+                <section class="dashboard-corner">
+                  <h3>Shops</h3>
+                  <ul v-if="selectedTab && selectedTab.shops">
+                    <li v-for="shop in selectedTab.shops" :key="shop">{{ shop }}</li>
+                  </ul>
+                  <span v-else>Aucun shop connu.</span>
+                </section>
+                
+                <section class="dashboard-corner">
+                  <h3>Liens</h3>
+                  <ul v-if="selectedTab && selectedTab.links">
+                    <li v-if="selectedTab.links.website">
+                      <a :href="selectedTab.links.website" target="_blank" rel="noopener">Site officiel</a>
+                    </li>
+                    <li v-if="selectedTab.links.instagram">
+                      <a :href="selectedTab.links.instagram" target="_blank" rel="noopener">Instagram</a>
+                    </li>
+                  </ul>
+                  <span v-else>Aucun lien disponible.</span>
+                </section>
+              </div>
+
               <section class="dashboard-corner dashboard-visuels-btn">
                 <button class="visuels-btn" @click="openVisuels">
                   Voir les visuels
@@ -195,19 +201,19 @@ function prevImage() {
       </main>
       <!-- Section visuels à part -->
       <div v-if="showVisuels" class="visuels-modal">
-        <button class="close-btn" @click="showVisuels = false">Fermer</button>
-        <h3>Visuels de {{ selectedTab.label }}</h3>
         <div v-if="selectedTab.images && selectedTab.images.length" class="carousel">
-          <button class="carousel-btn" @click="prevImage">&#8592;</button>
           <div class="carousel-mid">
+            <div class="carousel-count">{{ imageIndex + 1 }} / {{ selectedTab.images.length }}</div>
             <div class="carousel-image">
               <img :src="selectedTab.images[imageIndex]" alt="Visuel" />
             </div>
-            <div class="carousel-count">{{ imageIndex + 1 }} / {{ selectedTab.images.length }}</div>
           </div>
-          <button class="carousel-btn" @click="nextImage">&#8594;</button>
+          <div class="carousel-actions">
+            <button class="carousel-btn" @click="prevImage">&#8592;</button>
+            <button class="close-btn" @click="showVisuels = false">Fermer</button>
+            <button class="carousel-btn" @click="nextImage">&#8594;</button>
+          </div>
         </div>
-        <div v-else>Aucun visuel disponible.</div>
       </div>
     </div>
   </div>
@@ -355,7 +361,7 @@ function prevImage() {
   padding: 18px 14px;
   color: #fff;
   box-shadow: 0 2px 12px #0002;
-  min-height: 120px;
+
   display: flex;
   flex-direction: column;
 }
@@ -386,13 +392,18 @@ function prevImage() {
 }
 
 .visuels-btn {
-  border:2px dotted #b7ac0f;
+  border: 2px dotted #b7ac0f;
   color: #fff;
   border-radius: 6px;
-  padding: 10px 18px;
-  font-size: 1rem;
+  padding: 6px 10px;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background 0.2s;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  margin-top: 0;
 }
 
 .visuels-btn:hover {
@@ -436,7 +447,7 @@ function prevImage() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding-top: 30px;
   overflow-y: auto;
 }
@@ -546,43 +557,254 @@ function prevImage() {
 
 @media (max-width: 600px) {
   .table-container {
-    width: 96vw;
+    width: 100vw;
+    height: 100vh;
+    margin-top: 50px;
+    padding: 0;
   }
 
   .container {
+    width: 100vw;
     height: 100vh;
-    padding: 0;
+    border: none;
+    border-radius: 0;
+    margin: 0;
   }
 
   .nav {
     height: auto;
-    padding: 2px 2px 0;
+    padding: 8px 4px;
+    border-radius: 0;
+    border-bottom: 1px solid #475281;
+  }
+
+  .tabs-container {
+    font-size: 12px;
+    gap: 4px;
+    padding: 0 4px;
   }
 
   .tab {
-    font-size: 13px;
-    padding: 8px 8px;
+    font-size: 11px;
+    padding: 8px 10px;
+    min-width: max-content;
+    border-radius: 8px;
+    margin-right: 4px;
   }
 
-  .icon {
-    font-size: 64px;
+  .dashboard-container {
+    margin: 8px;
+    padding: 0;
+    overflow-y: auto;
   }
-}
 
-@media (max-width: 700px) {
   .brand-dashboard {
-    max-width: 98vw;
-    padding: 12px 2vw;
+    max-width: 100%;
+    width: 100%;
+    padding: 16px 12px;
+    border: 1px dotted #475281;
+    border-radius: 12px;
+    height: auto;
+    min-height: auto;
   }
 
   .dashboard-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, auto);
+    gap: 12px;
+  }
+
+  /* Spécifie l'ordre et la position des sections */
+  .dashboard-corner:nth-child(1) { /* À savoir */
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .dashboard-corner:nth-child(2) { /* Wishlist */
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .dashboard-corner:nth-child(3) { /* Shops */
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .dashboard-corner:nth-child(4) { /* Liens */
+    grid-column: 1;
+    grid-row: 4;
+    flex-direction: row;
+    height:fit-content;
+  }
+
+  /* Conteneur spécial pour shops et liens côte à côte */
+  .shops-links-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .visuels-modal {
+    padding-top: 20px;
+    padding-bottom: 32px;
+    min-height: 100vh;
+  }
+
+  .carousel {
+    flex-direction: column;
     gap: 16px;
+    width: 100%;
+    margin-bottom: 0;
+    justify-content: flex-end;
+  }
+
+  .carousel-mid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carousel-image {
+    margin-bottom: 12px;
+  }
+
+  .carousel-count {
+    margin-bottom: 18px;
+  }
+
+  .carousel-btn {
+    position: static;
+    margin: 0 12px 0 12px;
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+    /* Pour placer les boutons en bas */
+  }
+
+  .carousel-controls {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 12px;
+    margin-top: 0;
+  }
+
+  .close-btn {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    top: auto;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 12px;
   }
 }
 
-.dashboard-visuels-btn {
-  grid-column: 1 / span 2;
+@media (max-width: 600px) {
+  .carousel-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    z-index: 101;
+    width: 100vw;
+    background: none;
+    padding: 0 0 8px 0;
+  }
+
+  .carousel-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+    margin: 0;
+    border-radius: 50%;
+  }
+
+  .close-btn {
+    position: static;
+    transform: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    background: #23263a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 400px) {
+  .tab {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+
+  .dashboard-corner {
+    padding: 10px 8px;
+  }
+
+  .dashboard-corner h3 {
+    font-size: 0.95rem;
+  }
+
+  .dashboard-corner li {
+    font-size: 0.85rem;
+  }
+
+  .carousel-image {
+    padding: 16px;
+  }
+
+  .carousel-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+}
+@media (min-width: 600px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 24px;
+  }
+
+  .dashboard-visuels-btn {
+    grid-column: 1 / span 2; /* Prend les deux colonnes */
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+  }
+}
+/* Conteneur pour shops et liens sur mobile */
+.shops-links-container {
+  display: contents; /* Par défaut, se comporte comme si le conteneur n'existait pas */
+}
+
+@media (max-width: 600px) {
+  .shops-links-container {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .shops-links-container .dashboard-corner {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 80px;
+    margin: 0;
+    padding: 12px 8px;
+  }
 }
 </style>
