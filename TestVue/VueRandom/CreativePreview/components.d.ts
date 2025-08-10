@@ -29,6 +29,7 @@ declare module 'vue' {
     PreviewCard: typeof import('./src/components/PreviewCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SecretPage: typeof import('./src/components/SecretPage.vue')['default']
     Test: typeof import('./src/components/PhoneMusic.vue')['default']
     Tets: typeof import('./src/components/tets.vue')['default']
     WheelScrolling: typeof import('./src/components/WheelScrolling.vue')['default']

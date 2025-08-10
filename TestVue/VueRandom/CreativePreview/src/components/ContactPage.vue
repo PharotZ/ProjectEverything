@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { motion } from 'motion-v'
 import { instagramIcon, githubIcon, linkedinIcon, formIcon, vueIcon, motionIcon, libraryIcon } from '../assets/icons'
 
 const scriptURL = 'https://script.google.com/macros/s/AKfycbxmnQZxiMbSn5OS_ucHtgPQ2aYc9Qgy0J5JVsa5zVCQO_35SY8H4ybfERfnVvgVmgnI/exec'
@@ -71,7 +70,9 @@ function closeForm() {
         <div class="solar-system">
             <!-- Centre : GIF -->
             <div class="center-sun">
-                <img src="../assets/Globe.gif" alt="center gif" class="center-gif" />
+                <router-link to="/secret" style="cursor:default">
+                    <img src="../assets/Globe.gif" alt="center gif" class="center-gif" />
+                </router-link>
             </div>
             <!-- Planètes -->
             <div v-for="(planet, idx) in planets" :key="planet.label" class="planet-orbit"

@@ -3,7 +3,7 @@ import ParallaxScroll from './components/ParallaxScroll.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
 import Contact from './components/ContactPage.vue';
 import Fashion from './components/FashionTable.vue';
-
+import Secret from './components/SecretPage.vue';
 const routes = [
     {
         path: '',
@@ -29,6 +29,11 @@ const routes = [
         path: '/fashion',
         name: 'Fashion',
         component: Fashion,
+    },
+    {
+        path: '/secret',
+        name: 'Secret',
+        component: Secret,
     }
 ];
 const router = createRouter({
