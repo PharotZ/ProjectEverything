@@ -31,10 +31,3 @@ body {
   width: 100%;
   overflow-x: hidden;
 }
-
-/* Add some responsive styling */
-@media (min-width: 1024px) {
-  main {
-    padding: 0 2rem;
-  }
-}

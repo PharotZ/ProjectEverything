@@ -72,8 +72,7 @@ nav a.router-link-active {
 }
 
 main {
-  flex: 1; /* Add spacing for the fixed header */
-  padding-top: 10px; /* Add some additional padding */
+  flex: 1; /* Add spacing for the fixed header */ /* Add some additional padding */
 }
 
 @media screen and (max-width: 600px) {
