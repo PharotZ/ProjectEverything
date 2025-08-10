@@ -18,14 +18,19 @@ async function submitForm() {
 }
 
 const planets = [
-    { icon: githubIcon, label: 'GitHub', link: 'https://github.com/PharotZ', color: '#333', radius: 80, speed: 12, angle: 0 },
-    { icon: instagramIcon, label: 'Instagram', link: 'https://www.instagram.com/t4xyo', color: '#E4405F', radius: 128, speed: 16, angle: 60 },
-    { icon: linkedinIcon, label: 'LinkedIn', link: 'https://www.linkedin.com/in/theo-baron-72944929b', color: '#0077B5', radius: 176, speed: 14, angle: 120 },
-    { icon: vueIcon, label: 'Vue.js', link: 'https://vuejs.org', color: '#42b883', radius: 224, speed: 18, angle: 180 },
-    { icon: motionIcon, label: 'Motion', link: 'https://motion.dev/docs', color: '#fffb00', radius: 272, speed: 15, angle: 240 },
-    { icon: formIcon, label: 'Contact', link: '#', color: '#95a8ff', radius: 320, speed: 20, angle: 300 },
-    { icon: libraryIcon, label: 'Library', link: 'https://library.example.com', color: '#ff5722', radius: 368, speed: 22, angle: 360 }
+    { icon: githubIcon, label: 'GitHub', link: 'https://github.com/PharotZ', color: '#333', radius: 80, speed: 14, angle: 0 },
+    { icon: instagramIcon, label: 'Instagram', link: 'https://www.instagram.com/t4xyo', color: '#E4405F', radius: 128, speed: 18, angle: 80 },
+    { icon: linkedinIcon, label: 'LinkedIn', link: 'https://www.linkedin.com/in/theo-baron-72944929b', color: '#0077B5', radius: 176, speed: 16, angle: 160 },
+    { icon: formIcon, label: 'Contact', link: '#', color: '#95a8ff', radius: 228, speed: 22, angle: 240 },
+    { icon: libraryIcon, label: 'Library', link: '#', color: '#ff5722', radius: 300, speed: 26, angle: 300 }
 ]
+
+const subPlanets = [
+    { icon: vueIcon, label: 'Vue.js', link: 'https://vuejs.org', color: '#42b883', radius: 45, speed: 6, angle: 0 },
+    { icon: motionIcon, label: 'Motion', link: 'https://motion.dev/docs', color: '#fffb00', radius: 45, speed: 6, angle: 180 },
+]
+
+const showSubPlanets = ref(false)
 
 const showForm = ref(false)
 
@@ -39,10 +44,20 @@ function getPlanetStyle(planet, idx) {
 }
 
 function handlePlanetClick(planet) {
+    if (planet.label === 'Library') {
+        showSubPlanets.value = !showSubPlanets.value
+        return
+    }
     if (planet.link && planet.link !== '#') {
         window.open(planet.link, '_blank')
     } else if (planet.label === 'Contact') {
         showForm.value = true
+    }
+}
+
+function handleSubPlanetClick(subPlanet) {
+    if (subPlanet.link) {
+        window.open(subPlanet.link, '_blank')
     }
 }
 
@@ -61,7 +76,20 @@ function closeForm() {
             <!-- Planètes -->
             <div v-for="(planet, idx) in planets" :key="planet.label" class="planet-orbit"
                 :style="getPlanetStyle(planet, idx)" @click="handlePlanetClick(planet)">
-                <div class="planet-icon" v-html="planet.icon"></div>
+                <template v-if="planet.label !== 'Library'">
+                    <div class="planet-icon" v-html="planet.icon"></div>
+                </template>
+                <template v-else>
+                    <div class="planet-icon">
+                        <span v-html="planet.icon"></span>
+                        <div v-if="showSubPlanets" class="sub-solar-system">
+                            <div v-for="(sub, subIdx) in subPlanets" :key="sub.label" class="sub-planet-orbit"
+                                :style="getPlanetStyle(sub, subIdx)" @click.stop="handleSubPlanetClick(sub)">
+                                <div class="sub-planet-icon" v-html="sub.icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
 
@@ -83,6 +111,54 @@ function closeForm() {
 </template>
 
 <style scoped>
+/* Sous-planètes autour de Library */
+.sub-solar-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+.sub-planet-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: orbit-sub-planet var(--speed) linear infinite;
+    --angle: 0deg;
+    --radius: 60px;
+    animation-delay: calc(var(--angle) / 360 * var(--speed) * -1);
+    pointer-events: auto;
+    z-index: 20;
+}
+.sub-planet-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--planet-color, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid #fff3;
+}
+
+.sub-planet-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+}
+@keyframes orbit-sub-planet {
+    0% {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle)));
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(calc(360deg + var(--angle))) translateX(var(--radius)) rotate(calc(-360deg - var(--angle)));
+    }
+}
 .solar-system-container {
     width: 100vw;
     height: 100vh;
@@ -146,7 +222,6 @@ function closeForm() {
         transform: translate(-50%, -50%) rotate(calc(360deg + var(--angle))) translateX(var(--radius)) rotate(calc(-360deg - var(--angle)));
     }
 }
-
 .planet-icon {
     width: 48px;
     height: 48px;
